@@ -15,33 +15,34 @@ bool conecta_s (int n, pair<int, int> p){
   return (n == p.second);
 }
 
-int mejor_camino(int inicio, vector<pair<int,int>> r, int cant_rutas_usadas,vector<pair<int,int>> &ca, int mayor_camino ){
+bool conecta(int inicio, vector<pair<int,int>> r){
+
+}
+
+int mejor_camino(int inicio, vector<pair<int,int>> r, int cant_rutas_usadas,vector<pair<int,int>> &ca, int total_rutas, int mayor_camino){
 
       int mejor= 0;
-    //  for (int i = 0; i < r.size(); i++){
-        if (cant_rutas_usadas >= r.size()) return mayor_camino;
+      //int mayor_camino = 0;
+        if (cant_rutas_usadas >= total_rutas) return mayor_camino;
         else if (conecta_f(inicio, r[cant_rutas_usadas])){
-        //  std::cout << "hola!" << '\n';
             ca.push_back(r[cant_rutas_usadas]);
             cant_rutas_usadas++;
             mayor_camino++;
-          //  std::cout << r.size() << '\n';
-            mejor = mejor_camino(r[cant_rutas_usadas].first, r, cant_rutas_usadas, ca,  mayor_camino);
+            mejor = mejor_camino(r[cant_rutas_usadas].first, r, cant_rutas_usadas, ca,  total_rutas, mayor_camino);
             ca.pop_back();
         }
         else if (conecta_s(inicio, r[cant_rutas_usadas])){
           ca.push_back(r[cant_rutas_usadas]);
           cant_rutas_usadas++;
           mayor_camino++;
-          mejor = mejor_camino(r[cant_rutas_usadas].second, r, cant_rutas_usadas, ca,  mayor_camino);
+          mejor = mejor_camino(r[cant_rutas_usadas].second, r, cant_rutas_usadas, ca,  total_rutas, mayor_camino);
           ca.pop_back();
         }
         else{
             cant_rutas_usadas++;
-            mejor = mejor_camino(inicio, r, cant_rutas_usadas, ca,  mayor_camino);
+            mejor = mejor_camino(inicio, r, cant_rutas_usadas, ca,  total_rutas, mayor_camino);
         }
-    //  }
-      return mayor_camino;
+      return mejor;
 
 }
 
@@ -73,11 +74,10 @@ int main() {
     for (int i = 0; i < n; i++){
       //recorro la salida desde cada nodo.
       //i es el nodo por donde empiezo, rutas son las rutas que armé arriba, 0 es la cantidad de pasos que dí, camino_actual
-      // son las rutas que usé, mayor_camino es el mejor camino que tengo hasta ahora.
-      int camino = mejor_camino(i, rutas, 0, camino_actual, mayor_camino);
+      // son las rutas que usé, m es la cantidad de rutas, 0 es el mejor camino cuando empiezo a recorrer.
+      int camino = mejor_camino(i, rutas, 0, camino_actual, m, 0);
 
       if (camino > mayor_camino) mayor_camino = camino;
-      //std::cout << mayor_camino << '\n';
     }
     cout << mayor_camino << '\n';
 
