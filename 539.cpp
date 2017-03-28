@@ -39,7 +39,7 @@ int mejor_camino(int inicio, vector<pair<int,int>> r, vector<pair<int,int>> &ca,
   int mejor = 0;
   if (mayor_camino >= r.size()) return mayor_camino;
   vector<pair<int,int>>  rutas_conectadas = conecta_con(inicio,  r);
-  for(int i= 0; i<rutas_conectadas.size(); i++){
+  for(int i= 0; i<rutas_conectadas.size(); i++){  
       if (!existe_ruta(rutas_conectadas[i], ca)){
           ca.push_back(rutas_conectadas[i]);
           mayor_camino++;
