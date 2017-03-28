@@ -39,7 +39,7 @@ int mejor_camino(int inicio, vector<pair<int,int>> r, vector<pair<int,int>> &ca,
   int mejor = 0;
   if (mayor_camino >= r.size()) return mayor_camino;
   vector<pair<int,int>>  rutas_conectadas = conecta_con(inicio,  r);
-  for(int i= 0; i<rutas_conectadas.size(); i++){  
+  for(int i= 0; i<rutas_conectadas.size(); i++){
       if (!existe_ruta(rutas_conectadas[i], ca)){
           ca.push_back(rutas_conectadas[i]);
           mayor_camino++;
@@ -57,11 +57,11 @@ return max(mejor, mayor_camino);
 
 int main() {
   int n, m;
-  int mayor_camino = 0;
+
   vector<pair<int,int>> rutas;
 
   while (cin >> n) {
-
+    int mayor_camino = 0;
     //ya guardé en n la cantidad de nodos
     //guardo en m la cantidad de rutas
     cin >> m;
@@ -80,6 +80,7 @@ int main() {
 
     //backtrack sobre cada nodo
     for (int i = 0; i < n; i++){
+      vector<pair<int,int>> camino_actual;
       //recorro la salida desde cada nodo.
       //i es el nodo por donde empiezo, rutas son las rutas que armé arriba, 0 es la cantidad de pasos que dí, camino_actual
       // son las rutas que usé, m es la cantidad de rutas, 0 es el mejor camino cuando empiezo a recorrer.
