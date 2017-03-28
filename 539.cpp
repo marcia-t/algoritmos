@@ -15,34 +15,42 @@ bool conecta_s (int n, pair<int, int> p){
   return (n == p.second);
 }
 
-bool conecta(int inicio, vector<pair<int,int>> r){
-
+vector<pair<int, int>> conecta_con(int inicio, vector<pair<int,int>> r){
+  vector<pair<int, int>> rutas;
+  for (int i = 0; i < r.size(); i++){
+    if (inicio == r[i].first){
+      rutas.push_back(r[i]);
+    }
+    else if (inicio == r[i].second){
+      rutas.push_back(make_pair(r[i].second, r[i].first));
+    }
+  }
+  return rutas;
 }
 
-int mejor_camino(int inicio, vector<pair<int,int>> r, int cant_rutas_usadas,vector<pair<int,int>> &ca, int total_rutas, int mayor_camino){
+bool existe_ruta(pair<int,int> r, vector<pair<int,int>> rutas){
+  for (int i =0; i<rutas.size(); i++){
+    if ((r.first == rutas[i].first && r.second == rutas[i].second) || (r.first == rutas[i].second && r.second == rutas[i].first )) return true;
+  }
+  return false;
+}
 
-      int mejor= 0;
-      //int mayor_camino = 0;
-        if (cant_rutas_usadas >= total_rutas) return mayor_camino;
-        else if (conecta_f(inicio, r[cant_rutas_usadas])){
-            ca.push_back(r[cant_rutas_usadas]);
-            cant_rutas_usadas++;
-            mayor_camino++;
-            mejor = mejor_camino(r[cant_rutas_usadas].first, r, cant_rutas_usadas, ca,  total_rutas, mayor_camino);
-            ca.pop_back();
-        }
-        else if (conecta_s(inicio, r[cant_rutas_usadas])){
-          ca.push_back(r[cant_rutas_usadas]);
-          cant_rutas_usadas++;
+int mejor_camino(int inicio, vector<pair<int,int>> r, vector<pair<int,int>> &ca, int mayor_camino){
+  int mejor = 0;
+  if (mayor_camino >= r.size()) return mayor_camino;
+  vector<pair<int,int>>  rutas_conectadas = conecta_con(inicio,  r);
+  for(int i= 0; i<rutas_conectadas.size(); i++){
+      if (!existe_ruta(rutas_conectadas[i], ca)){
+          ca.push_back(rutas_conectadas[i]);
           mayor_camino++;
-          mejor = mejor_camino(r[cant_rutas_usadas].second, r, cant_rutas_usadas, ca,  total_rutas, mayor_camino);
+          mejor = mejor_camino (rutas_conectadas[i].second, r, ca, mayor_camino);
+
           ca.pop_back();
-        }
-        else{
-            cant_rutas_usadas++;
-            mejor = mejor_camino(inicio, r, cant_rutas_usadas, ca,  total_rutas, mayor_camino);
-        }
-      return mejor;
+      }
+
+
+  }
+return max(mejor, mayor_camino);
 
 }
 
@@ -75,21 +83,12 @@ int main() {
       //recorro la salida desde cada nodo.
       //i es el nodo por donde empiezo, rutas son las rutas que armé arriba, 0 es la cantidad de pasos que dí, camino_actual
       // son las rutas que usé, m es la cantidad de rutas, 0 es el mejor camino cuando empiezo a recorrer.
-      int camino = mejor_camino(i, rutas, 0, camino_actual, m, 0);
+      int camino = mejor_camino(i, rutas,  camino_actual, 0);
 
       if (camino > mayor_camino) mayor_camino = camino;
+
     }
     cout << mayor_camino << '\n';
 
   }
 }
-
-
-/*  //si todavía no agregué ninguna ruta
-  if (ca.size() < 1 ||  ca.size() > 0 && ) {
-    ca.push_back(r[i]);
-    mc++;
-    backtracking(vector<pair<int, int> > &ca, int mc, vector<pair<int, int> > r)
-    ca.pop_back();
-  }
-  else return;*/
