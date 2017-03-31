@@ -7,13 +7,6 @@ using namespace std;
 
 vector<pair<int,int>> camino_actual;
 
-bool conecta_f(int n, pair<int, int> p){
-    return (n == p.first);
-}
-
-bool conecta_s (int n, pair<int, int> p){
-    return (n == p.second);
-}
 
 vector<pair<int, int>> conecta_con(int inicio, vector<pair<int,int>> r){
     vector<pair<int, int>> rutas;
