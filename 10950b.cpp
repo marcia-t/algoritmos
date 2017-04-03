@@ -95,23 +95,27 @@ Con impressions corto si llego a más de 100
 En result guardo el string que voy armando
 codes y letters son siempre los mismos que ingresaron por consola
 */
-void get_badcode(vector<pair<string, int>> codes, vector<string> letters, string code,  string result){
+vector<string> get_badcode(vector<pair<string, int>> codes, vector<string> letters, string code,  string result,   vector<string> c_result){
 
-  if(impressions ==100) return;
+  //if(impressions ==100) return;
   //abro el árbol para cada letra (en el vector también están las letras con el 0 adelante)
   for (int i = 0; i<letters.size(); i++){
     if (matches(letters[i], code, codes)){
      Result x=   create_result(letters[i], code, codes, result);
      //si el code está vacío quiere decir que ya descifré todo
      if(x.code == ""){
-       std::cout << x.result << '\n';
+       c_result.push_back(x.result);
+       //VER DE IR AGREGANDO EN ORDEN
+       std::cout << "engancha!" << '\n';
+       //std::cout << x.result << '\n';
        impressions++;
      }
      //sino, sigo entrando por las ramas del árbol
      //x.code tiene lo que resta del código a descifrar y x.result el string descifrado hasta el momento
-      else   get_badcode(codes, letters, x.code, x.result);
+      else c_result =  get_badcode(codes, letters, x.code, x.result, c_result);
     }
   }
+  return c_result;
 }
 
 
@@ -149,7 +153,12 @@ int main(){
 
       std::cout << "" << '\n';
       std::cout << "Case #"+to_string(occ) << '\n';
-      get_badcode(codes, letters, code,"");
+      vector<string> c_result;
+      vector<string> dercrypted = get_badcode(codes, letters, code,"", c_result);
+
+      for (int i = 0; i<dercrypted.size(); i++){
+        std::cout << dercrypted[i] << '\n';
+      }
 
     }
 
