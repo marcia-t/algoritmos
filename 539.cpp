@@ -7,13 +7,6 @@ using namespace std;
 
 vector<pair<int,int>> camino_actual;
 
-bool conecta_f(int n, pair<int, int> p){
-    return (n == p.first);
-}
-
-bool conecta_s (int n, pair<int, int> p){
-    return (n == p.second);
-}
 
 vector<pair<int, int>> conecta_con(int inicio, vector<pair<int,int>> r){
     vector<pair<int, int>> rutas;
@@ -37,21 +30,21 @@ bool existe_ruta(pair<int,int> r, vector<pair<int,int>> rutas){
 
 int mejor_camino(int inicio, vector<pair<int,int>> r, vector<pair<int,int>> &ca, int mayor_camino){
     int mejor = 0;
+    int ultimo;
     if (mayor_camino >= r.size()) return mayor_camino;
     vector<pair<int,int>>  rutas_conectadas = conecta_con(inicio,  r);
     for(int i= 0; i<rutas_conectadas.size(); i++){
         if (!existe_ruta(rutas_conectadas[i], ca)){
             ca.push_back(rutas_conectadas[i]);
-            mayor_camino = ca.size();
-            mejor = mejor_camino (rutas_conectadas[i].second, r, ca, mayor_camino);
-
+            //mayor_camino = ca.size();
+            ultimo = mejor_camino (rutas_conectadas[i].second, r, ca, mayor_camino);
+            mayor_camino= max(mayor_camino, ultimo);
             ca.pop_back();
         }
 
-
     }
-
-    return max(mejor, mayor_camino);
+    mayor_camino = max(mayor_camino, (int)ca.size());
+    return  mayor_camino;
 
 }
 
@@ -83,8 +76,9 @@ int main() {
         for (int i = 0; i < n; i++){
             vector<pair<int,int>> camino_actual;
             //recorro la salida desde cada nodo.
-            //i es el nodo por donde empiezo, rutas son las rutas que armé arriba, 0 es la cantidad de pasos que dí, camino_actual
-            // son las rutas que usé, m es la cantidad de rutas, 0 es el mejor camino cuando empiezo a recorrer.
+            //i es el nodo por donde empiezo, rutas son las rutas que armé arriba, camino_actual
+            // son las rutas que usé,  0 es el mejor camino cuando empiezo a recorrer.
+
             int camino = mejor_camino(i, rutas,  camino_actual, 0);
             std::cout << camino_actual.size() << '\n';
             if (camino > mayor_camino) mayor_camino = camino;
