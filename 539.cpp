@@ -7,7 +7,9 @@ using namespace std;
 
 vector<pair<int,int>> camino_actual;
 
-
+/*
+En esta función traigo todas las rutas que conectan con un nodo inicial para no tener que seguir recorriendo
+*/
 vector<pair<int, int>> conecta_con(int inicio, vector<pair<int,int>> r){
     vector<pair<int, int>> rutas;
     for (int i = 0; i < r.size(); i++){
@@ -21,6 +23,9 @@ vector<pair<int, int>> conecta_con(int inicio, vector<pair<int,int>> r){
     return rutas;
 }
 
+/*
+Me fijo si una ruta existe (al derecho y al revés) en un arreglo de rutas
+*/
 bool existe_ruta(pair<int,int> r, vector<pair<int,int>> rutas){
     for (int i =0; i<rutas.size(); i++){
         if ((r.first == rutas[i].first && r.second == rutas[i].second) || (r.first == rutas[i].second && r.second == rutas[i].first )) return true;
@@ -28,6 +33,9 @@ bool existe_ruta(pair<int,int> r, vector<pair<int,int>> rutas){
     return false;
 }
 
+/**
+Esta función retorna el mejor camino encontrado
+*/
 int mejor_camino(int inicio, vector<pair<int,int>> r, vector<pair<int,int>> &ca, int mayor_camino){
     int mejor = 0;
     int ultimo;
@@ -36,13 +44,13 @@ int mejor_camino(int inicio, vector<pair<int,int>> r, vector<pair<int,int>> &ca,
     for(int i= 0; i<rutas_conectadas.size(); i++){
         if (!existe_ruta(rutas_conectadas[i], ca)){
             ca.push_back(rutas_conectadas[i]);
-            //mayor_camino = ca.size();
             ultimo = mejor_camino (rutas_conectadas[i].second, r, ca, mayor_camino);
             mayor_camino= max(mayor_camino, ultimo);
             ca.pop_back();
         }
 
     }
+    //el mayor camino lo obtendré cuando llegue más lejos y quedará guardado en mayor_camino
     mayor_camino = max(mayor_camino, (int)ca.size());
     return  mayor_camino;
 
@@ -80,7 +88,7 @@ int main() {
             // son las rutas que usé,  0 es el mejor camino cuando empiezo a recorrer.
 
             int camino = mejor_camino(i, rutas,  camino_actual, 0);
-
+            //voy guardando el mejor camino
             if (camino > mayor_camino) mayor_camino = camino;
 
         }

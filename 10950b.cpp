@@ -147,10 +147,10 @@ int main(){
       }
       cin >> code;
 
-      std::cout << "" << '\n';
+
       std::cout << "Case #"+to_string(occ) << '\n';
       get_badcode(codes, letters, code,"");
-
+      std::cout << "" << '\n';
     }
 
 }
