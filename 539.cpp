@@ -88,11 +88,8 @@ int main() {
             // son las rutas que usé,  0 es el mejor camino cuando empiezo a recorrer.
 
             int camino = mejor_camino(i, rutas,  camino_actual, 0);
-<<<<<<< HEAD
             //voy guardando el mejor camino
-=======
             std::cout << camino_actual.size() << '\n';
->>>>>>> 9af2dfc94931500ce2ac70391ca65e14cf90fcad
             if (camino > mayor_camino) mayor_camino = camino;
 
         }

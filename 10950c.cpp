@@ -166,7 +166,7 @@ int main(){
 
       vector<string> decrypted = get_badcode(codes, letters, code,"");
 
-      std::cout << "sali de getbadcod" << '\n';
+
       sort(decrypted.begin(), decrypted.end());
 
       int j;
