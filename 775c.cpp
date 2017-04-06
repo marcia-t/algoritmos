@@ -12,20 +12,13 @@ using namespace std;
 int n = 0;
 bool encontre = false;
 
-bool matrizRutas[256][256];
+constexpr int MAX_R = 256;
+bool matrizRutas[MAX_R][MAX_R];
 
-
+/*Retorna una lista de pares que conectan con un nodo (por def no son más de tres)*/
 vector<pair<int, int> > conecta_con(int inicio){
     vector<pair<int, int> > rutas;
-    /*for (int i = 0; i < r.size(); i++){
-        if (inicio == r[i].first){
-            rutas.push_back(r[i]);
-        }
-        else if (inicio == r[i].second){
-            rutas.push_back(make_pair(r[i].second, r[i].first));
-        }
-    }*/
-    for (int i = 0; i<256; i++){
+    for (int i = 0; i<MAX_R; i++){
         if (matrizRutas[inicio][i]){
             rutas.push_back(make_pair(inicio , i));
         }
@@ -35,94 +28,57 @@ vector<pair<int, int> > conecta_con(int inicio){
 
 
 /*
-Me fijo si una ruta existe (al derecho y al revés) en un arreglo de rutas
+Me fijo si una ruta existe (al derecho y al revés) en una matriz de rutas
 */
-bool existe_ruta(pair<int,int> r, bool matriz[256][256]){
-    /*  for (int i =0; i<rutas.size(); i++){
-          if ((r.first == rutas[i].first && r.second == rutas[i].second) || (r.first == rutas[i].second && r.second == rutas[i].first )) return true;
-      }
-      return false;*/
+bool existe_ruta(pair<int,int> r, bool matriz[MAX_R][MAX_R]){
     return (matriz[r.first][r.second] || matriz[r.second][r.first]);
 }
 
 /*
-Me fijo si el nodo ya existe entre las rutas que visité
+Me fijo si el nodo ya existe entre los nodos que visité
 */
-bool existe_nodo(int nodo, bool nodos[256]){
-    /*  for (int i = 0; i<rutas.size(); i++){
-          if (rutas[i].first == nodo || rutas[i].second == nodo){
-              return true;
-          }
-      }
-      return false;*/
+bool existe_nodo(int nodo, bool nodos[MAX_R]){
     return (nodos[nodo]);
 }
 
-bool es_hamiltoniano(bool rutasVisitadas[256]){
+/*me fijo si el camino es hamiltoniano todos los nodos existentes están entre los nodos visitados*/
+bool es_hamiltoniano(bool nodosVisitados[MAX_R]){
     for (int i = 1; i<=n; i++){
-        if (!existe_nodo(i, rutasVisitadas)) return false;
+        if (!existe_nodo(i, nodosVisitados)) return false;
     }
     return true;
 }
 
 
-
-
-string armar_result(bool rutasVisitadas[256]){
-    string resultado = "";
-    for (int i =0; i<256; i++){
-        /*  std::string r = std::to_string(camino[i].first);
-          resultado = resultado + r + " ";
-          if (i+1 == camino.size()){
-              std::string r = std::to_string(camino[i].second);
-              resultado = resultado + r;
-          }*/
-        if (rutasVisitadas[i]) {
-            resultado = resultado + std::to_string(i);
-        }
-    }
-    return resultado;
-}
-
 //en inicial veo desde dónde salgo para ver cuando llego al final
-void ciclo(int inicial, int inicio, bool  matrizActual[256][256], bool nodosActuales[256], string resultado ){
+void ciclo(int inicial, int inicio, bool  matrizActual[MAX_R][MAX_R], bool nodosActuales[MAX_R], string resultado ){
     vector<pair<int,int> >  rutas_conectadas = conecta_con(inicio);
-    //si en el camino actual tengo la misma cant de rutas que el total de rutas, llegué al final
     if (encontre) return;
     for(int i= 0; i<rutas_conectadas.size(); i++){
-        if (!existe_ruta(rutas_conectadas[i], matrizActual) && !existe_nodo(rutas_conectadas[i].second, nodosActuales)){// ELSE si el nodo existe--> ver si llegue al final!
-
+        if (!existe_ruta(rutas_conectadas[i], matrizActual) && !existe_nodo(rutas_conectadas[i].second, nodosActuales)){
             matrizActual[rutas_conectadas[i].first][rutas_conectadas[i].second] = true;
             matrizActual[rutas_conectadas[i].second][rutas_conectadas[i].first] = true;
             nodosActuales[rutas_conectadas[i].second] = true;
             resultado = resultado + " " + std::to_string(rutas_conectadas[i].second);
-            ciclo(inicial, rutas_conectadas[i].second, /*rutas,*/ matrizActual, nodosActuales, resultado);
+
+            ciclo(inicial, rutas_conectadas[i].second,  matrizActual, nodosActuales, resultado);
+
             resultado = resultado.substr(0, resultado.length()-2);
             nodosActuales[rutas_conectadas[i].second] = false;
             matrizActual[rutas_conectadas[i].first][rutas_conectadas[i].second] = false;
             matrizActual[rutas_conectadas[i].second][rutas_conectadas[i].first] = false;
-
         }
         else {
             if (rutas_conectadas[i].second == inicial){
-                //ca.push_back(rutas_conectadas[i]);
                 if (es_hamiltoniano(nodosActuales)){
-                    //string resultado = armar_result(nodosActuales);
                     resultado = resultado + " " + std::to_string(inicial);
                     std::cout << resultado << '\n';
                     encontre = true;
                 }
-                //ca.pop_back();
             }
         }
     }
     return;
-}
-
-void limpiarNodos(bool nodosActuales[256]){
-    for (int i = 0; i< 256; i++){
-        nodosActuales[i] =false;
-    }
 }
 
 
@@ -131,27 +87,23 @@ int main(){
     while (cin >> n){
         encontre = false;
         string a;
-        bool matrizActual[256][256];
-        bool nodosActuales[256];
-        for (int i = 0; i< 256; i++){
-            for (int j = 0; j< 256; j++){
+        bool matrizActual[MAX_R][MAX_R];
+        bool nodosActuales[MAX_R];
+        for (int i = 0; i< MAX_R; i++){
+            for (int j = 0; j< MAX_R; j++){
                 matrizRutas[i][j] = false;
                 matrizActual[i][j] = false;
             }
             nodosActuales[i] =false;
         }
-
-
         while(!encontre)  {
             cin >> a;
             if (a == "%"){
-                //break;
                 for (int i = 1; i<=n; i++){
-                    limpiarNodos(nodosActuales);
                     nodosActuales[i] = true;
                     string resultado = std::to_string(i);
-
                     ciclo(i, i, matrizActual, nodosActuales, resultado);
+                    nodosActuales[i] = false;
                     if (encontre) i = n+1;
                 }
                 if (!encontre) {std::cout << "N" << '\n';
@@ -163,11 +115,7 @@ int main(){
                 int c =   std::atoi( a.c_str() );
                 matrizRutas[c][b] = true;
                 matrizRutas[b][c] = true;
-                //rutas.push_back(make_pair(c, b));
-
             }
-
         }
     }
-
 }
