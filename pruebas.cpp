@@ -30,11 +30,20 @@ bool paso_x_todos(vector<pair<int,int>> ca){
 int main()
 {
 
-bool v[10];
+/*bool v[10];
 v[2] = 1;
 
 for (int i = 0; i<10; i++){
-  if (v[i]) std::cout << v[i] << '\n';
+  if (v[i]) std::cout << v[i] << '\n';*/
+
+  string a = "010";
+  int b = 10;
+  int c = atoi( a.c_str() );
+
+  std::cout << b << '\n';
+  std::cout << c << '\n';
+  std::cout << a << '\n';
+
 }
 
   /*

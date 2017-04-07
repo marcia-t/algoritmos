@@ -19,7 +19,7 @@ c es el código que estoy buscnado en este momento
 */
 bool match_code(int c, string code){
   string cc = to_string(c);
-  return (cc == code.substr(0, 1));
+  return (cc == code.substr(0, 1) || cc == code.substr(0, 2) || cc == code.substr(0, 3));
 }
 
 /*
@@ -31,12 +31,17 @@ bool matches(string letter, string code, vector<pair<string, int>> codes){
   if (code.substr(0, 1) == "0"){
     //si ambos empiezan con 0, descarto los 0s y chequeo
       //string l = letter.substr(1, 2);
-      /*if (code.substr(0, 2) == "00"){
+      if (code.substr(0, 2) == "00"){
         return false;
-      }*/
+      }
       string c = code.substr(1);
       return matches(letter , c, codes);
   }
+/*  else if (code.substr(0, 2) == "00"){
+      //string l = letter.substr(2);
+      string c = code.substr(2);
+      return matches(letter , c, codes);
+  }*/
   else{
     for (int i = 0; i < codes.size(); i++){
       if(codes[i].first == letter && match_code(codes[i].second, code)){
@@ -56,11 +61,17 @@ Result create_result(string letter, string code, vector<pair<string, int>> codes
   string res_code;
   string res_res;
   if (code.substr(0, 1) == "0"){
-    //si el codigo empiezan con 0, descarto los 0s y chequeo
+    //si ambos empiezan con 0, descarto los 0s y chequeo
       //string l = letter.substr(1, 2);
       string c = code.substr(1);
       return create_result(letter , c, codes, result);
   }
+  /*else if (code.substr(0, 2) == "00"){
+      //si ambos empiezan con 00, descarto los 00s y chequeo
+    //  string l = letter.substr(2);
+      string c = code.substr(2);
+      return create_result(letter , c, codes, result);
+  }*/
   else{
     for (int i = 0; i < codes.size(); i++){
       if(codes[i].first == letter && match_code(codes[i].second, code)){
@@ -121,13 +132,11 @@ int main(){
       occ++;
       impressions = 0;
 
-      if (n == 0) {
-        std::cout  << '\n';
-        return 0;}
+      if (n == 0) return 0;
 
 
       codes.resize(n);
-      //letters.resize(n*2);
+      letters.resize(n*2);
       for (int i= 0; i<n; i++){
         string a;
         int b;
@@ -135,15 +144,15 @@ int main(){
         cin >> b;
         codes[i] = make_pair(a, b);
 
+        //agrego cada letra y su variante en caso de tener un 0 adelante para ir abriendo el árbol
         letters.push_back(a);
         std::sort(letters.begin(), letters.end());
       }
       cin >> code;
 
-
       std::cout << "Case #"+to_string(occ) << '\n';
       get_badcode(codes, letters, code,"");
-        std::cout << "" << '\n';
+      std::cout << "" << '\n';
 
     }
 
