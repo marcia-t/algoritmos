@@ -19,7 +19,7 @@ c es el código que estoy buscnado en este momento
 */
 bool match_code(int c, string code){
   string cc = to_string(c);
-  return (cc == code.substr(0, 1) || cc == code.substr(0, 2) || cc == code.substr(0, 3));
+  return (cc == code.substr(0, 1));
 }
 
 /*
