@@ -35,15 +35,18 @@ v[2] = 1;
 
 for (int i = 0; i<10; i++){
   if (v[i]) std::cout << v[i] << '\n';*/
-
+/*
   string a = "010";
   int b = 10;
   int c = atoi( a.c_str() );
 
   std::cout << b << '\n';
   std::cout << c << '\n';
-  std::cout << a << '\n';
+  std::cout << a << '\n';*/
+  vector<int> c;
+  c.resize(29);
 
+  std::cout << c[31] << '\n';
 }
 
   /*
