@@ -66,9 +66,8 @@ int main(){
     std::cout << "Sums of " << t << ":" << '\n';
     sumitup(b_nums,t, 0, 0);
     if (sums.empty()){
-      std::cout << "NONE";
+      std::cout << "NONE" << '\n';
     }
-    std::cout << '\n';
 
   }
 }
