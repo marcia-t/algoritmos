@@ -8,6 +8,11 @@ map<string, bool> sums;
 
 std::vector<int> nums;
 
+/*
+En save_sum armo el string del resultado con los signos '+'.
+Si el string no es clave (todavía no lo agregué y no existe) en mi map de sums, imprimo el resultado y lo agrego al map.
+De lo contrario, lo ignoro.
+*/
 void save_sum(std::vector<bool> b_nums){
   string sum = "";
   for (int i=0; i<b_nums.size(); i++){
@@ -24,6 +29,14 @@ void save_sum(std::vector<bool> b_nums){
   }
 }
 
+/*
+sumtiup resuelve el problema utilizando backtracking con 'partes de'.
+Recibe un vector de booleanos que denota el recorrido del árbol de decisiones que voy armando, el total que tnego que sumar,
+la posición del vector en la que me encuentro, y la suma parcial.
+Si llegué a la suma que necesito (c_sum == t), imprimo los resultados y salgo de esa rama.
+Si mi suma es mayor al total, salgo de la rama.
+Y si mi posición es igual a la cantidad de números que me dieron para resolver el problema, salgo porque ya no tengo opciones.
+*/
 void sumitup( std::vector<bool> b_nums, int t, int pos, int c_sum){
   if(c_sum == t) {
     save_sum(b_nums);
