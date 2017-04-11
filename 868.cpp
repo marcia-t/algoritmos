@@ -8,15 +8,14 @@
 
 using namespace std;
 int cases = 0;
-constexpr  int filas = 0;
-constexpr int cols = 0;
+constexpr int filas;
+constexpr int cols;
 
 int maze[filas][cols];
 bool visitados[filas][cols];
 
 
 int main(){
-  int filas, cols;
   while (cin >> cases){
     cin >> filas;
     cin >> cols;
@@ -31,7 +30,7 @@ int main(){
         visitados[i][j] = false;
       }
     }
-    
+
 
 
 
