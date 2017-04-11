@@ -1,34 +1,40 @@
-/*-laberinto (nxn)
--filas columnas
--matriz de visitados (nxn)
+#include <iostream>
+#include<cstdio>
+#include<cstring>
+#include<map>
+#include<vector>
+#include <string>
+#include<cstdlib>
 
-*/
+using namespace std;
+int cases = 0;
+constexpr  int filas = 0;
+constexpr int cols = 0;
 
-
-
-
-backtrack(fila, col, proximo, limite){
-  si fila o col invalida ||
-    visitado[fila][col] || proximo =! laberinto[fila][col]
-    {return //fracaso
-    }
-
-    si fila = FILAS //si es la última fila
-      {return col //exito, retorna la columna x la cual sale
-      }
-
-    proximo++;
-    if(proximo > limite) {
-      proximo = 1;
-      limite++;
-    }
-    marcar visitado [fila][col]
-    backtrack(fila-1,col, proximo, limite);
-
-}
+int maze[filas][cols];
+bool visitados[filas][cols];
 
 
 int main(){
-  //no conocemos la columna
-  backtrack(1, c, 1, 1);
+  int filas, cols;
+  while (cin >> cases){
+    cin >> filas;
+    cin >> cols;
+
+    int maze[filas][cols];
+
+    for (int i = 0; i < filas; i++){
+      for (int j = 0; j < cols; j++){
+        int a;
+        cin >> a;
+        maze[i][j] = a;
+        visitados[i][j] = false;
+      }
+    }
+    
+
+
+
+
+  }
 }
