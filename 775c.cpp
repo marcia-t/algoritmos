@@ -41,7 +41,7 @@ bool existe_nodo(int nodo, bool nodos[MAX_R]){
     return (nodos[nodo]);
 }
 
-/*me fijo si el camino es hamiltoniano todos los nodos existentes están entre los nodos visitados*/
+/*me fijo si el camino es hamiltoniano, esto es: todos los nodos existentes están entre los nodos visitados*/
 bool es_hamiltoniano(bool nodosVisitados[MAX_R]){
     for (int i = 1; i<=n; i++){
         if (!existe_nodo(i, nodosVisitados)) return false;
@@ -50,11 +50,16 @@ bool es_hamiltoniano(bool nodosVisitados[MAX_R]){
 }
 
 
-//en inicial veo desde dónde salgo para ver cuando llego al final
+//en inicial veo desde dónde salgo para ver cuándo llego al final
+//en resultado voy acumulando el camino como String para no tener que recorrer los arreglos al terminar.
+//matrizActual guarda con booleanos por dónde ya pasé
+//inicio es el nodo donde me encuentro
+//nodosActuales guarda los nodos que ya visité, se agrega para no tener que recorrer la matriz para saber si es hamiltoniano
 void ciclo(int inicial, int inicio, bool  matrizActual[MAX_R][MAX_R], bool nodosActuales[MAX_R], string resultado ){
     vector<pair<int,int> >  rutas_conectadas = conecta_con(inicio);
     if (encontre) return;
     for(int i= 0; i<rutas_conectadas.size(); i++){
+      //si la ruta y el nodo aún no fueron visitados, sigo buscando
         if (!existe_ruta(rutas_conectadas[i], matrizActual) && !existe_nodo(rutas_conectadas[i].second, nodosActuales)){
 
             matrizActual[rutas_conectadas[i].first][rutas_conectadas[i].second] = true;
@@ -71,6 +76,8 @@ void ciclo(int inicial, int inicio, bool  matrizActual[MAX_R][MAX_R], bool nodos
 
         }
         else {
+          //si de las que conectan , alguna llega al inicial (termina el ciclo) chequeo que haya pasado por todos los nodos
+          //(es_hamiltoniano) y de serlo, imprimo y salgo.
             if (rutas_conectadas[i].second == inicial){
                 if (es_hamiltoniano(nodosActuales)){
                     resultado = resultado + " " + std::to_string(inicial);

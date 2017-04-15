@@ -55,7 +55,9 @@ void   go(bool visitados[1000][1000],int fila, int columna, int proximo, int lim
 
 }
 
-
+/*
+No sabía cuál era el tamaño mayor del laberinto, y asumí que no habría uno mayor a 1000x1000
+*/
 int main(){
     while (cin >> CASES){
 
@@ -79,9 +81,10 @@ int main(){
                 go(visitados, 1, i, 1, 1, i);
             }
 
+            if (c!=0) cout << '\n';
             cout << "1 " << MEJORES.first << '\n';
             cout << FILAS << " " << MEJORES.second << '\n';
-            cout << '\n';
+
         }
 
     }
