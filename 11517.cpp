@@ -19,8 +19,11 @@ vector<vector<pp>> mem;
 constexpr ll INF = (100*100+1);
 
 
-ll minp (int ptp, int c){
-  
+pp minp (int ptp, int c){
+  if (c == 0 && ptp>0) return make_pair(-INF, -INF);
+  if (ptp < 0 || ptp == 0) return mem[ptp][c];
+  //moneda actual es coins[c]
+
 }
 
 int main (){
