@@ -20,10 +20,16 @@ constexpr ll INF = (100*100+1);
 
 
 pp minp (int ptp, int c){
-  if (c == 0 && ptp>0) return make_pair(-INF, -INF);
-  if (ptp < 0 || ptp == 0) return mem[ptp][c];
-  //moneda actual es coins[c]
+  pp p_i = make_pair(-INF, -INF):
+  if (c == 0 && ptp>0) return p_i;
+  if (ptp == 0) return 0;
+  if (mem[ptp][c] == p_i){
+    int p = ptp - coins[c];
+    if (p<0) p = p*(-1);
 
+  }
+
+  return mem[ptp][c];
 }
 
 int main (){
