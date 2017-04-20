@@ -8,7 +8,7 @@
 
 using namespace std;
 using pp = pair<int,int>;
-using ull = long long;
+using ll = long long;
 
 
 
@@ -16,12 +16,11 @@ int CASES = 0;
 constexpr int MAX_OBJECTS = 1000;
 constexpr int MAX_PEOPLE = 100;
 constexpr int MAX_WEIGHT = 30;
-//int mem[MAX_WEIGHT][MAX_OBJECTS];
-vector<vector<ull>> mem;
+vector<vector<ll>> mem;
 vector<pp> pw;
-constexpr ull INF = -(10*10+1);
+constexpr ll INF = -(10*10+1);
 
-ull win (int w, int n){
+ll win (int w, int n){
     if (w<0) return INF;
     if (n == 0 || w == 0) return 0;
     pp pair =  pw[n];
@@ -36,7 +35,7 @@ int main(){
     cin >> CASES;
 
     for (int  i = 0; i < CASES; i++){
-        mem.assign(MAX_WEIGHT+1, vector<ull>(MAX_OBJECTS, INF));
+        mem.assign(MAX_WEIGHT+1, vector<ll>(MAX_OBJECTS, INF));
         int max_t = 0;
         int objs, people;
         cin >> objs;
@@ -52,7 +51,7 @@ int main(){
         for (int j = 0; j<people; j++){
             int mw;
             cin >> mw;
-            ull max = win(mw, objs);
+            ll max = win(mw, objs);
             max_t = max_t + max;
         }
         std::cout << max_t << '\n';
