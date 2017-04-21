@@ -20,13 +20,17 @@ constexpr ll INF = (100*100+1);
 
 
 pp minp (int ptp, int c){
-  pp p_i = make_pair(-INF, -INF):
+  pp p_i = make_pair(INF, INF);
   if (c == 0 && ptp>0) return p_i;
-  if (ptp == 0) return 0;
+  if (ptp <= 0) return pp(-ptp,0);
   if (mem[ptp][c] == p_i){
     int p = ptp - coins[c];
-    if (p<0) p = p*(-1);
+    //if (p<0) p = p*(-1);
+    pp prim = minp(ptp, c-1);
+    pp sec = minp(p, c-1);
 
+    pp val=  min(prim, pp(sec.first, sec.second+1));
+    mem[ptp][c] = val;
   }
 
   return mem[ptp][c];
@@ -36,7 +40,7 @@ int main (){
   cin >> CASES;
   for (int i = 0; i< CASES; i++){
 
-    mem.assign(MAX_PRICE+1, vector<pp>(MAX_COINS+1, make_pair(-INF, -INF)));
+    mem.assign(MAX_PRICE+1, vector<pp>(MAX_COINS+1, pp(INF, INF)));
 
     int ptp, c;
     cin >> ptp;
@@ -47,7 +51,9 @@ int main (){
       cin >>a;
       coins[i] = a;
     }
-    minp(ptp, c);
+    pp j =minp(ptp, c);
+
+    std::cout << j.first+ptp << " " << j.second << '\n';
   }
 }
 /*
