@@ -55,17 +55,14 @@ int main (){
       cin >>a;
       coins[i] = a;
     }
-    for(int i = 0; i <= ptp+1; i++) {
-      for(int j = 0; j <= c+1; j++) {
+    for(int i = 0; i <= MAX_PRICE; ++i) {
+
+      for(int j = 0; j <= MAX_COINS; ++j) {
         mem[i][j] = INF;
+        mem_c[i][j] = INF;
       }
     }
     ll j =minp(ptp, c);
-    for(int i = 0; i <= ptp+j+1; i++) {
-      for(int j = 0; j <= c+1; j++) {
-        mem[i][j] = INF;
-      }
-    }
     ll co = qcoins(j+ptp, c);
     std::cout << j+ptp << " " << co << '\n';
     //std::cout << co << '\n';

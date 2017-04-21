@@ -25,7 +25,6 @@ pp minp (int ptp, int c){
   if (ptp <= 0) return pp(-ptp,0);
   if (mem[ptp][c] == p_i){
     int p = ptp - coins[c];
-    //if (p<0) p = p*(-1);
     pp sec = minp(p, c-1);
     pp val=  min(minp(ptp, c-1), pp(sec.first, sec.second+1));
     mem[ptp][c] = val;
