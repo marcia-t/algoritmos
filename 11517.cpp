@@ -26,10 +26,8 @@ pp minp (int ptp, int c){
   if (mem[ptp][c] == p_i){
     int p = ptp - coins[c];
     //if (p<0) p = p*(-1);
-    pp prim = minp(ptp, c-1);
     pp sec = minp(p, c-1);
-
-    pp val=  min(prim, pp(sec.first, sec.second+1));
+    pp val=  min(minp(ptp, c-1), pp(sec.first, sec.second+1));
     mem[ptp][c] = val;
   }
 
@@ -40,7 +38,7 @@ int main (){
   cin >> CASES;
   for (int i = 0; i< CASES; i++){
 
-    mem.assign(MAX_PRICE+1, vector<pp>(MAX_COINS+1, pp(INF, INF)));
+
 
     int ptp, c;
     cin >> ptp;
@@ -51,9 +49,10 @@ int main (){
       cin >>a;
       coins[i] = a;
     }
+    mem.assign(ptp+1, vector<pp>(c+1, pp(INF, INF)));
     pp j =minp(ptp, c);
 
-    std::cout << j.first+ptp << " " << j.second << '\n';
+    std::cout << j.first+ptp << " "<< j.second<< '\n';
   }
 }
 /*
