@@ -8,7 +8,7 @@
 
 using namespace std;
 using pp = pair<int,int>;
-using ll = long long;
+//using ll = long long;
 
 
 int CASES = 0;
@@ -16,7 +16,7 @@ constexpr int MAX_PRICE = 10000;
 constexpr int MAX_COINS = 100;
 vector<int> coins;
 vector<vector<pp>> mem;
-constexpr ll INF = (100*100+1);
+constexpr int INF = (100*100+1);
 
 
 pp minp (int ptp, int c){
