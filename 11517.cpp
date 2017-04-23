@@ -8,7 +8,6 @@
 
 using namespace std;
 using pp = pair<int,int>;
-//using ll = long long;
 
 
 int CASES = 0;
@@ -36,9 +35,6 @@ pp minp (int ptp, int c){
 int main (){
   cin >> CASES;
   for (int i = 0; i< CASES; i++){
-
-
-
     int ptp, c;
     cin >> ptp;
     cin>> c;
@@ -50,12 +46,6 @@ int main (){
     }
     mem.assign(ptp+1, vector<pp>(c+1, pp(INF, INF)));
     pp j =minp(ptp, c);
-
     std::cout << j.first+ptp << " "<< j.second<< '\n';
   }
 }
-/*
-lo que tengo q pagar nunca va a ser más caro que 10000
-tengo q buscar el mínimo
-
-*/

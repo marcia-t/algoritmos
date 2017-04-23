@@ -8,44 +8,38 @@
 
 using namespace std;
 using pp = pair<int,int>;
-using ll = long long;
+//using ll = long long;
 
 
 int CASES = 0;
 constexpr int MAX_PRICE = 10000;
 constexpr int MAX_COINS = 100;
 vector<int> coins;
-int mem[MAX_PRICE][MAX_COINS];
-int mem_c[MAX_PRICE];
-constexpr ll INF = (100*100+1);
+//vector<vector<pp>> mem;
+vector<pp> mem;
+constexpr int INF = (100*100+1);
 
 
-ll minp (int ptp, int c){
-  if (c == 0 && ptp>0) return INF;
-  if (ptp <= 0) return -ptp;
-  if (mem[ptp][c] == INF){
+pp minp (int ptp, int c){
+  pp p_i = make_pair(INF, INF);
+  if (c == 0 && ptp>0) return p_i;
+  if (ptp <= 0) return pp(-ptp,0);
+  if (mem[ptp] == p_i){
     int p = ptp - coins[c];
-    ll val=  min(minp(ptp, c-1), minp(p,c-1));
-    mem[ptp][c] = val;
+    pp sec = minp(p, c-1);
+    pp val=  min(minp(ptp, c-1), pp(sec.first, sec.second+1));
+    mem[ptp] = val;
   }
 
-  return mem[ptp][c];
-}
-
-ll qcoins (int ptp, int c){
-  if (c == 0  || ptp == 0)  return 0;
-  if (ptp < 0) return -INF;
-
-  if(mem_c[ptp] == INF){
-    int val = ptp - coins[c];
-    mem_c[ptp] = max(qcoins(ptp, c-1), 1+qcoins(val, c-1));
-  }
-  return mem_c[ptp];
+  return mem[ptp];
 }
 
 int main (){
   cin >> CASES;
   for (int i = 0; i< CASES; i++){
+
+
+
     int ptp, c;
     cin >> ptp;
     cin>> c;
@@ -55,15 +49,14 @@ int main (){
       cin >>a;
       coins[i] = a;
     }
-    for(int i = 0; i <= MAX_PRICE; ++i) {
-      mem_c[i] = INF;
-      for(int j = 0; j <= MAX_COINS; ++j) {
-        mem[i][j] = INF;
-      }
-    }
-    ll j =minp(ptp, c);
-    ll co = qcoins(j+ptp, c);
-    std::cout << j+ptp << " " << co << '\n';
-    //std::cout << co << '\n';
+    mem.assign(ptp+1, pp(INF,INF));
+    pp j =minp(ptp, c);
+
+    std::cout << j.first+ptp << " "<< j.second<< '\n';
   }
 }
+/*
+lo que tengo q pagar nunca va a ser más caro que 10000
+tengo q buscar el mínimo
+
+*/

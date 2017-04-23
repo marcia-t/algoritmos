@@ -35,7 +35,7 @@ response_t min2 (response_t v1, response_t v2) {
 
 response_t minp2 (int ptp, int c){
     if (c == 0 && ptp>0) return p_i;
-    if (ptp <= 0) return {-ptp,0};x
+    if (ptp <= 0) return {-ptp,0};
     if (mem[ptp][c].ptp != INF) {
       return mem[ptp][c];
     }
