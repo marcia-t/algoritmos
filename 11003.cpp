@@ -20,7 +20,7 @@ int loads[MAX_LOAD];
 int a_boxes;
 
 
-//load representa el resto de capacidad que me queda para llenar
+//load representa el resto de capacidad que me queda para llenar y box es la caja que voy a decidir usar o no (estaría sobre la capacidad load)
 int max_h(int box, int load){
     //si ya recorrí todas las cajas restantes.
     if (box == a_boxes) return 0;
@@ -28,7 +28,7 @@ int max_h(int box, int load){
       //calculo el resultado de no usar la caja actual (paso a la siguiente caja con el mismo resto de carga disponible)
         int not_using =  max_h(box + 1, load);
         mem[box][load] = not_using;
-        if (load >= weights[box]) //si todavía me queda lugar para apilar la que viene, hago la comparación entre usar y no usar la caja actual
+        if (load >= weights[box]) //si todavía me queda lugar para apilar la que viene, me quedo con el máximo entre usar y no usar la caja
             mem[box][load] = max(not_using, 1 + max_h(box + 1,
                                                       min(load - weights[box], loads[box])));
     }
@@ -50,7 +50,7 @@ int main(){
             for (int j = 0; j <= MAX_LOAD; ++j)
                 mem[i][j] = INV;
         int highest = 0;
-        
+
         for (int h=0; h<a_boxes;h++){
           //uso la primer caja (todas pueden ser la primera)
             highest = max(highest, max_h(h+1, loads[h])+1);
