@@ -33,6 +33,7 @@ ll minp (int ptp, int c){
 }
 
 ll qcoins (int ptp, int c){
+  std::cout << "entro con "<<ptp <<" y"  <<c << '\n';
   if (c == 0  || ptp == 0)  return 0;
   if (ptp < 0) return -INF;
 
