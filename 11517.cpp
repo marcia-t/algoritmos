@@ -55,13 +55,13 @@ int main (){
             cin >>a;
             coins[i] = a;
         }
-        for(int i = 0; i <= MAX_PRICE; i++) {
-            for(int j = 0; j < MAX_COINS; j++) {
+        for(int i = 0; i <= ptp; i++) {
+            for(int j = 0; j <= c; j++) {
                 mem[i][j] = INF;
             }
         }
         int j =minp(ptp, c);
-        for(int i = 0; i <= MAX_PRICE; i++) {
+        for(int i = 0; i <= ptp+j+1; i++) {
 
             mem_c[i] = INF;
 
