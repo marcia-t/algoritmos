@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1493238110 source:/home/mtejeda/unq/algoritmos/aaa/main.cpp
+	<iostream>
+	<cstdio>
+	<cstring>
+	<map>
+	<vector>
+	<string>
+	<cstdlib>
+
