@@ -12,7 +12,7 @@ constexpr int MAX_LOAD = 3000;
 constexpr int MAX_BOXES = 1000;
 constexpr int INV = -1;
 
-
+//en mem guardo para cada caja (de mi arreglo), la cantidad máxima de cajas que puedo apilar sobre cierta capacidad
 int mem[MAX_BOXES+1][MAX_WEIGHT+1];
 int weights[MAX_WEIGHT];
 int loads[MAX_LOAD];
@@ -31,6 +31,9 @@ int max_h(int box, int load){
         if (load >= weights[box]) //si todavía me queda lugar para apilar la que viene, me quedo con el máximo entre usar y no usar la caja
             mem[box][load] = max(not_using, 1 + max_h(box + 1,
                                                       min(load - weights[box], loads[box])));
+        //*guardo el  mínimo entre la capacidad que me queda disponible (la capacidad menos el peso que agrego) y la capacidad
+        //de la caja que agrego; esto es para mantener la regla de que todas las cajas apiladas sobre una caja no deben exeder
+        //su capacidad total.
     }
     return mem[box][load];
 }

@@ -47,6 +47,7 @@ int main (){
       cin >>a;
       coins[i] = a;
     }
+    mem.resize(ptp+1);
     mem.assign(ptp+1, vector<pp>(c+1, pp(INF, INF)));
     pp j =minp(ptp, c);
     std::cout << j.first+ptp << " "<< j.second<< '\n';

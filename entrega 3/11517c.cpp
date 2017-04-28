@@ -29,15 +29,16 @@ int minp (int ptp, int c){
 
     return mem[ptp][c];
 }
-
+//sé que siempre busco x el valor justo
 int qcoins (int ptp, int c){
-    if (c == 0 && ptp > 0)  return INF;
-    if (ptp<= 0) return 0;
+    if ((c == 0 && ptp > 0) || (ptp < 0))  return INF;
+    if (ptp == 0) return 0;
+
 
     if(mem_c[ptp] == INF){
         int val = ptp - coins[c];
         int no_uso = qcoins(ptp, c-1);
-        int uso=1+qcoins(val, c-1);
+        int uso = 1+qcoins(val, c-1);
         mem_c[ptp] = min(no_uso, uso);
     }
     return mem_c[ptp];
