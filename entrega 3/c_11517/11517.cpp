@@ -9,7 +9,7 @@
 using namespace std;
 using pp = pair<int,int>;
 
-
+pp not_i = pp(-1,-1);
 int CASES = 0;
 constexpr int MAX_PRICE = 10000;
 constexpr int MAX_COINS = 100;
@@ -23,7 +23,7 @@ pp minp (int ptp, int c){
   pp p_i = make_pair(INF, INF);
   if (c == 0 && ptp>0) return p_i;
   if (ptp <= 0) return pp(-ptp,0);
-  if (mem[ptp][c] == p_i){
+  if (mem[ptp][c] == not_i){
     int p = ptp - coins[c];
     //si uso la moneda, le sumo una moneda usada a la respuesta actual
     pp sec = minp(p, c-1);
@@ -48,7 +48,7 @@ int main (){
       coins[i] = a;
     }
     mem.resize(ptp+1);
-    mem.assign(ptp+1, vector<pp>(c+1, pp(INF, INF)));
+    mem.assign(ptp+1, vector<pp>(c+1, not_i));
     pp j =minp(ptp, c);
     std::cout << j.first+ptp << " "<< j.second<< '\n';
   }
