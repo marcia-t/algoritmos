@@ -26,7 +26,7 @@ void solve(){
       int p_2 = amoney - p_1;
       if(binary_search(bprices.begin(), bprices.end(), p_2)){
         //si existe el par, voy a chequear que su diferencia sea menor que el mejor par
-        //cuento con que el par guarde el nro más chico y el más grande en fst y scnd
+        //cuento con que el par guarde el nro más chico y el más grande en fst y scnd respectivamente
         int d_1 = best.second - best.first;
         int d_2 = p_2 - p_1;
         if (d_2<d_1){
@@ -36,7 +36,7 @@ void solve(){
     }
   }
   std::cout << "Peter should buy books whose prices are " << best.first << " and " << best.second << "." << '\n';
-
+  cout << '\n';
 }
 
 int main(){
