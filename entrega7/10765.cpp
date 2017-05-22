@@ -68,12 +68,23 @@ int main(){
                 G[b].push_back(a);
             }
         }
-
+        stations.assign(n, ii());
         for (size_t i = 0; i < articulationVertex.size(); i++) {
           if (articulationVertex[i]){
-            vp.push_back(ii(i, children[i]+1));
+            if (i==0) stations.push_back(ii(i, children[i]));
+            else stations.push_back(ii(i, children[i]+1));
           }
+          else stations.push_back(ii(i, 1));
         }
+
+        std::sort(stations.begin(), stations.end(), [](const std::pair<int,int> &left, const std::pair<int,int> &right) {
+            return ((left.second > right.second));
+          });
+
+        for (size_t i = 0; i < m; i++) {
+          std::cout << stations[i].first << " " << stations[i].second << '\n';
+        }
+        std::cout << '\n';
 
     }
 }
