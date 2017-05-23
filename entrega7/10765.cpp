@@ -2,6 +2,8 @@
 #include <vector>
 #include <sstream>
 #include<algorithm>
+
+
 /**
 Sabemos que el grafo de entrada es Conexo
 */
@@ -15,16 +17,28 @@ using graph = vector<vi>;
 using ii = pair<int,int>;
 using vp = vector<ii>;
 
+/*
+En las variables globales guardo:
+level: nivel en el árbol DFS para cada nodo
+articulationVertex:  guarda para cada vértice si es o no PC.
+minReach: el mínimo alcanzable en el árbol DFS para cada vértice
+G: lista de adyacencias
+rc: cantidad de componentes conexas que genera un vértice al ser removido del grafo
+stations: vector auxiliar para ordenar los resultados
+rootChildren: contempla el caso base de que la raíz del árbol DFS sea PC (tenga más de 1 hijo)
+*/
 
 constexpr int UNVISITED = -1;
 vi level;
 vb articulationVertex;
 vi minReach;
 graph G;
-vi children;
+vi rc;
 vp stations;
 int n, m, rootChildren;
 
+/*Ordeno los pares del resultado: primero por la mayor cantidad de cc causadas
+y después por los vértices*/
 bool sortpair(const pair<int,int> &a,
               const pair<int,int> &b)
 {
@@ -46,7 +60,7 @@ void dfs(int u) {
             dfs(v);
             if (minReach[v] >= level[u]){
                 articulationVertex[u] = true;
-                children[u] = children[u]+1;
+                rc[u] = rc[u]+1;
             }
             minReach[u] = min(minReach[u], minReach[v]);
         }
@@ -66,24 +80,26 @@ int main(){
                 level.assign(n, UNVISITED);
                 articulationVertex.assign(n, false);
                 minReach.assign(n,n+1);
-                children.assign(n, 0);
+                rc.assign(n, 0);
                 int root = 0;
                 level[root] = 0;
                 rootChildren = 0;
                 dfs(root);
-                articulationVertex[root] = (rootChildren > 1);
+                articulationVertex[root] = (rootChildren > 1); //raìz es pto de corte
                 break;
             }
-            else{
+            else{ //bidireccional
                 G[a].push_back(b);
                 G[b].push_back(a);
             }
         }
+
+
         stations.assign(n, ii());
         for (size_t i = 0; i < articulationVertex.size(); i++) {
             if (articulationVertex[i]){
-                if (i==0) stations.push_back(ii(i, children[i]));
-                else stations.push_back(ii(i, children[i]+1));
+                if (i==0) stations.push_back(ii(i, rc[i]));
+                else stations.push_back(ii(i, rc[i]+1));
             }
             else stations.push_back(ii(i, 1));
         }
