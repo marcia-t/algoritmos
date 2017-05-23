@@ -25,6 +25,15 @@ vi children;
 vp stations;
 int n, m, rootChildren;
 
+bool sortpair(const pair<int,int> &a,
+              const pair<int,int> &b)
+{
+    if (a.second == b.second){
+        return (a.first < b.first);
+    }else
+        return (a.second > b.second);
+}
+
 
 
 void dfs(int u) {
@@ -32,11 +41,13 @@ void dfs(int u) {
     for (int v : G[u]) {
         if (level[v] == UNVISITED) {
             level[v] = level[u]+1;
-            children[u] = children[u]+1;
+
             if (level[u] == 0) rootChildren++;
             dfs(v);
-            if (minReach[v] >= level[u])
+            if (minReach[v] >= level[u]){
                 articulationVertex[u] = true;
+                children[u] = children[u]+1;
+            }
             minReach[u] = min(minReach[u], minReach[v]);
         }
         else minReach[u] = min(minReach[u], level[v]);
@@ -70,19 +81,17 @@ int main(){
         }
         stations.assign(n, ii());
         for (size_t i = 0; i < articulationVertex.size(); i++) {
-          if (articulationVertex[i]){
-            if (i==0) stations.push_back(ii(i, children[i]));
-            else stations.push_back(ii(i, children[i]+1));
-          }
-          else stations.push_back(ii(i, 1));
+            if (articulationVertex[i]){
+                if (i==0) stations.push_back(ii(i, children[i]));
+                else stations.push_back(ii(i, children[i]+1));
+            }
+            else stations.push_back(ii(i, 1));
         }
 
-        std::sort(stations.begin(), stations.end(), [](const std::pair<int,int> &left, const std::pair<int,int> &right) {
-            return ((left.second > right.second));
-          });
+        std::sort(stations.begin(), stations.end(), sortpair);
 
         for (size_t i = 0; i < m; i++) {
-          std::cout << stations[i].first << " " << stations[i].second << '\n';
+            std::cout << stations[i].first << " " << stations[i].second << '\n';
         }
         std::cout << '\n';
 
