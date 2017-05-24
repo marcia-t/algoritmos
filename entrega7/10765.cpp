@@ -5,7 +5,11 @@
 
 
 /**
-Sabemos que el grafo de entrada es Conexo
+Complejidad
+La complejidad del algoritmo será lineal en relación a los vértices que se procesen.
+En este caso se procesan todos los vértices una vez.
+Asumimos que procesar un vértice es O(1)
+
 */
 
 
@@ -38,7 +42,7 @@ vp stations;
 int n, m, rootChildren;
 
 /*Ordeno los pares del resultado: primero por la mayor cantidad de cc causadas
-y después por los vértices*/
+y después por los vértices (orden ascendente)*/
 bool sortpair(const pair<int,int> &a,
               const pair<int,int> &b)
 {
