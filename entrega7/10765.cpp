@@ -6,9 +6,13 @@
 
 /**
 Complejidad
-La complejidad del algoritmo será lineal en relación a los vértices que se procesen.
+La complejidad del algoritmo será lineal en relación a los vértices de la componente conexa.
 En este caso se procesan todos los vértices una vez.
 Asumimos que procesar un vértice es O(1)
+Siendo n la cantidad de vértices y m (cant de aritas que se obtiene del input), la complejidad es O(n + m)
+A eso se le suma la complejidad del sort que se realiza al final, O(n log n)
+
+Complejidad: O(n + m) + O(n log n)
 
 */
 
@@ -41,7 +45,7 @@ vi rc;
 vp stations;
 int n, m, rootChildren;
 
-/*Ordeno los pares del resultado: primero por la mayor cantidad de cc causadas
+/*Ordeno los pares del resultado: primero por la mayor cantidad de cc causadas (orden descendente)
 y después por los vértices (orden ascendente)*/
 bool sortpair(const pair<int,int> &a,
               const pair<int,int> &b)
@@ -62,6 +66,7 @@ void dfs(int u) {
 
             if (level[u] == 0) rootChildren++;
             dfs(v);
+            //si es punto de corte, sumo 1 a la cantidad de cc que genera quitar ese vértice
             if (minReach[v] >= level[u]){
                 articulationVertex[u] = true;
                 rc[u] = rc[u]+1;
