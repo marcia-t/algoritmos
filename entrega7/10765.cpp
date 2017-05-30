@@ -8,7 +8,7 @@
 Complejidad
 La complejidad del algoritmo será lineal en relación a los vértices de la componente conexa.
 En este caso se procesan todos los vértices una vez.
-Asumimos que procesar un vértice es O(1)
+Asumimos que procesar un vértice es O(1) (acceder a matrices y realizar algún cambio)
 Siendo n la cantidad de vértices y m (cant de aritas que se obtiene del input), la complejidad es O(n + m)
 A eso se le suma la complejidad del sort que se realiza al final, O(n log n)
 
@@ -57,7 +57,7 @@ bool sortpair(const pair<int,int> &a,
 }
 
 
-
+//dfs recorrerá el grafo desde u en búsqueda de sus puntos de corte
 void dfs(int u) {
     minReach[u] = level[u];
     for (int v : G[u]) {
