@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <functional>
 #include <array>
+#include <list>
 
 
 using namespace std;
@@ -43,10 +44,28 @@ for (int i = 0; i<10; i++){
   std::cout << b << '\n';
   std::cout << c << '\n';
   std::cout << a << '\n';*/
-  vector<int> c;
+  /*vector<int> c;
   c.resize(29);
 
-  std::cout << c[31] << '\n';
+  std::cout << c[31] << '\n';*/
+
+  list<int> q;
+
+  q.push_back(2);
+  q.push_back(3);
+    q.push_back(1);
+int s;
+
+
+for (size_t i = 0; i < 3; i++) {
+  /* code */
+  s = q.front();
+  std::cout << s << '\n';
+   q.pop_front();
+}
+
+
+
 }
 
   /*
