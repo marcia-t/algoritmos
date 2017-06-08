@@ -11,7 +11,11 @@ using graph = vector<vi>;
 constexpr int UNDEFINED = -1;
 constexpr int INF = 21;
 
-
+/*
+Complejidad
+Siendo n la cantidad de vértices (en este caso 20), la complejidad de este algoritmo resulta en O(n^3)
+ya que se realizan 3 recorridos de tamaño n para calcular cada distancia (la operación no suma pues son accesos O(1)).
+*/
 
 int main(){
     graph distance;
