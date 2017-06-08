@@ -14,6 +14,14 @@ constexpr int VISITED = 1;
 
 
 /*
+Complejidad
+Los nodos aparecerán solamente una vez en la cola (ya que luego se marcan como visitados).
+Como cada vez que saco un nodo de la cola, proceso n veces, el algoritmo tiene O(n²)
+En este caso podría ser incluso menos porque cuando encuentro el código de desbloqueo ya termino de ejecutar,
+pero calculamos siempre el peor caso.
+*/
+
+/*
 Usaré una lista como cola
 En las variables globales guardo:
 L, U, R, BUTTONS: viene por input y son los valores indicados para resolver el problema.
