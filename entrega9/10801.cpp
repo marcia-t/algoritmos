@@ -39,7 +39,10 @@ int main(){
     }
     pi start = pi(0,0);
     for (size_t i = 1; i <= n; i++) {
-      /* code */
+      int p;
+      //si sale desde abajo, conecto con el pto de partida
+      if (p==0)
+
     }
   }
 }
