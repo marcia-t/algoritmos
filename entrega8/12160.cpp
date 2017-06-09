@@ -91,6 +91,7 @@ int main(){
         DISTANCE[L] = 0;
         V[L] = VISITED;
 
+        //aplico BFS desde la raíz (el código actual)
         bfs(L);
         if (MIN == UNDEFINED) std::cout << "Permanently Locked" << '\n';
         else std::cout << MIN << '\n';
