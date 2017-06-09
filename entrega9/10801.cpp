@@ -1,17 +1,31 @@
 #include <iostream>
+#include <cstdio>
+#include <algorithm>
+#include <cstring>
+#include <string>
+#include <cctype>
+#include <stack>
+#include <queue>
+#include <list>
 #include <vector>
+#include <map>
 #include <sstream>
-#include<algorithm>
-#include<string>
-#include<list>
+#include <cmath>
+#include <bitset>
+#include <utility>
+#include <set>
+#include <numeric>
 
 using namespace std;
 using vi = vector<int>;
+using vii = vector<vi>;
 using pi = pair<int,int>;
 using vpi = vector<pi>;
 using graph = vector<vpi>;
+constexpr int INF = 21;
 
 vi times;
+vii floors;
 
 /*
 n=2 k=30
@@ -38,11 +52,32 @@ int main(){
       times[i] = t;
     }
     pi start = pi(0,0);
+    floors.assign(n+1, vi(21,-INF));
     for (size_t i = 1; i <= n; i++) {
-      int p;
-      //si sale desde abajo, conecto con el pto de partida
-      if (p==0)
+      char f [1000];
+      gets (f);
+      //std::getline (std::cin,f);
+       char * pch;
+        pch = strtok (f," ");
+          while (pch != NULL)
+            {
+              std::cout << atoi(pch) << '\n';
+              int b = atoi(pch);
+              floors[i].push_back(atoi(pch));
+              pch = strtok (NULL, " ");
+            }
 
     }
+
+    for (int i=0;i<3;i++)
+          {
+            for (int j=0;j<20;j++)
+            {
+              std::cout << "|" << i << ", "<< j << "  "  <<floors[i][j] << "|";
+
+            }
+            std::cout << '\n';
+
+          }
   }
 }
