@@ -7,7 +7,9 @@
 
 using namespace std;
 using vi = vector<int>;
-using graph = vector<vi>;
+using pi = pair<int,int>;
+using vpi = vector<pi>;
+using graph = vector<vpi>;
 
 vi times;
 
@@ -35,6 +37,7 @@ int main(){
       cin >> t;
       times[i] = t;
     }
+    pi start = pi(0,0);
     for (size_t i = 1; i <= n; i++) {
       /* code */
     }
