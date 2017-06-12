@@ -9,6 +9,12 @@
 #include <bitset>
 #include <set>
 
+
+/*
+COMPLEJIDAD
+
+*/
+
 using namespace std;
 using vi = vector<int>;
 using vii = vector<vi>;
@@ -17,23 +23,19 @@ using vpi = vector<pi>;
 using graph = vector<vpi>;
 constexpr int INF = 1000*1000;
 
+/*
+times es un vector que guarda los tiempos que tarda cada ascensor para recorrer un piso
+stopping_floors es un vector auxiliar que se usa al leer el input para guardar los pisos a los que llega un ascensor
+G es el grafo que guarda [piso] <piso_vecino, peso>
+adyacencies guarda los pisos en los que se puede cambiar de ascensor
+k es el piso al que debemos llegar
+*/
+
 vi times;
 vii stopping_floors;
 graph G;
 vii adyacencies;
 int k;
-
-/*
-n=2 k=30
-t1=10 t2=5
-p1=0 1 3 5 7 9 11 13 15 20 99
-p2=4 13 15 19 20 25 30
-
-n=cant ascensores
-k=piso al que quiero llegar
-ti=tiempo que tarda el ascensor i entre piso y piso
-pi= pisos en los que se detiene el ascensor i
-*/
 
 
 
@@ -60,13 +62,11 @@ int dijkstra(int from) {
     return d;
 }
 
-
+/*
+n es la cantidad de ascensores
+*/
 int main(){
-    string input_line;
     int n;
-
-
-
     while(scanf("%d", &n)!=EOF){
         cin >> k;
         times.resize(n+1);
