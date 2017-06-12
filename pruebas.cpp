@@ -49,24 +49,33 @@ for (int i = 0; i<10; i++){
 
   std::cout << c[31] << '\n';*/
 
-  list<int> q;
+/*list<int> q;
 
   q.push_back(2);
   q.push_back(3);
     q.push_back(1);
-int s;
+int s;*/
 
 
-for (size_t i = 0; i < 3; i++) {
+//for (size_t i = 0; i < 3; i++) {
   /* code */
-  s = q.front();
+/*  s = q.front();
   std::cout << s << '\n';
-   q.pop_front();
+   q.pop_front();*/
+
+
+   std::vector<string> v;
+   v.resize(10);
+   v[1] = "hola";
+   v[3] = "chau";
+
+   if(v[2] == NULL ) std::cout << "es null!" << '\n';
+   else std::cout << "no es nada!" << '\n';
 }
 
 
 
-}
+
 
   /*
 vector<pair<int,int>> rutas;
@@ -101,5 +110,21 @@ for (int i=0;i<10;i++)
         std::cout << '\n';
 
       }
+
+*/
+
+/*imprimir grafo con pesos
+
+for (int i=0;i<G.size();i++)
+        {
+          for (int j=0;j<G[i].size();j++)
+          {
+            std::cout << "|[" << i << "]" << "  ("  <<G[i][j].first << ", "<< G[i][j].second << ")|";
+
+          }
+          std::cout << '\n';
+
+        }
+
 
 */
