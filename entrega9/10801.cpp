@@ -12,7 +12,13 @@
 
 /*
 COMPLEJIDAD
+La complejidad del Algoritmo de Dijkstra usando colas de prioridad es de O(m log n).
+Siendo:
+n=vértices (a lo sumo 500 en este caso)
+m=aristas (n*6)*
 
+*Cada vértice puede tener hasta grado 6, con aristas: hacia arriba, hacia abajo y a lo sumo 4 hacia los ascensores
+que comparten piso. 
 */
 
 using namespace std;
