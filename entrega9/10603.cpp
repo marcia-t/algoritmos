@@ -14,12 +14,20 @@ using namespace std;
 struct jug {
     int load;
     int filled;
+    bool operator==(const jug& a) const
+      {
+          return (load == a.load && filled == a.filled);
+      }
 };
 
 struct node {
     jug a;
     jug b;
     jug c;
+    bool operator==(const node& nn) const
+      {
+          return (a == nn.a && b == nn.b && c == nn.c);
+      }
 };
 
 jug create_jug (int load, int filled){
@@ -66,9 +74,11 @@ jug get_jug(int n, node t){
     }
 }
 
+//ojo: tengo que guardar la cantidad de lo que pasé
 //1:a, 2:b, 3:c
 //precond: asumo que ya chequeé que las cantidades permiten pasar de p a q.
-node pass_from_to (int p, int q, node t){
+pair<int,node> pass_from_to (int p, int q, node t){
+    int sent;
     jug from = get_jug(p,t);
     jug to = get_jug(q,t);
     int ct = to.load - to.filled; //lugar que tengo en to
@@ -79,36 +89,49 @@ node pass_from_to (int p, int q, node t){
     if(ct <= cf) {
         to.filled+=ct;
         from.filled-=ct;
+        sent = ct;
     }
     else {
         to.filled+=cf;
         from.filled = 0;
+        sent=cf;
     }
     t = set_jug_node(p,from,t);
     t = set_jug_node(q,to,t);
-    return t;
+    return make_pair(sent, t);
 }
 
-//neighbor: peso + vecino
-using nb = pair<int,node>;
-using vn = vector<nb>;
-using graph = map<node, vn>;
-using visited = map<node,bool>;
+//neighbor(pi): peso + vecino
+using pi = pair<int,int>;
+using vpi = vector<pi>;
+using graph = vector<vpi>;
+using equiv = vector<node> ;
 int a, b, c, d;
+graph G;
 
 
 
 int main(){
     node uno = create_node(3, 0, 4, 0, 5, 5);
-    node dos = pass_from_to(3, 1, uno);
-    node tres = pass_from_to (3,2, dos);
-    std::cout << dos.a.load << "  " << dos.a.filled << '\n';
-    std::cout << dos.b.load << "  " << dos.b.filled << '\n';
-    std::cout << dos.c.load << "  " << dos.c.filled << '\n';
+   pair <int,node> dos = pass_from_to(3, 1, uno);
+   std::cout << dos.first  << '\n';
+    pair <int,node> tres = pass_from_to (3,2, dos.second);
+    std::cout << tres.first << '\n';
+    std::cout << dos.second.a.load << "  " << dos.second.a.filled << '\n';
+    std::cout << dos.second.b.load << "  " << dos.second.b.filled << '\n';
+    std::cout << dos.second.c.load << "  " << dos.second.c.filled << '\n';
 
-    std::cout << tres.a.load << "  " << tres.a.filled << '\n';
-    std::cout << tres.b.load << "  " << tres.b.filled << '\n';
-    std::cout << tres.c.load << "  " << tres.c.filled << '\n';
+    std::cout << tres.second.a.load << "  " << tres.second.a.filled << '\n';
+    std::cout << tres.second.b.load << "  " << tres.second.b.filled << '\n';
+    std::cout << tres.second.c.load << "  " << tres.second.c.filled << '\n';
+
+
+    node o = create_node(3, 0, 4, 0, 5, 5);
+    node q = create_node(3, 2, 4, 0, 5, 5);
+    equiv e;
+    e.push_back(o);
+    bool exists = std::find(std::begin(e), std::end(e), q) != std::end(e);
+    if (exists) std::cout << "existe!" << '\n';
     /*int n;
     cin >> n;
     for (size_t i = 0; i < n; i++) {
