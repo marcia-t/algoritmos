@@ -47,6 +47,7 @@ node create_node (int a, int fa, int b,int fb, int c, int fc){
 }
 
 //1:a, 2:b, 3:c
+//en la pos n  del nodo t setear el jug j
 node set_jug_node(int n, jug j, node t){
     switch (n) {
         case 1:
@@ -63,6 +64,7 @@ node set_jug_node(int n, jug j, node t){
 }
 
 //1:a, 2:b, 3:c
+//get el jug n del nodo t
 jug get_jug(int n, node t){
     switch (n) {
         case 1:
@@ -111,6 +113,14 @@ int a, b, c, d;
 graph G;
 
 
+/*
+En cada nodo tengo que:
+pasar 1 a 2, 1 a 3, 2 a 1, 2 a 3, 3 a 1, 3 a 2
+creo el nodo de cada uno
+me fijo si existe entre las equivalencias
+si no existe, la agrego, y agrego el nodo actual a los vecinos del padre
+si ya existe, no lo agrego a las equiv pero sí lo agrego a los vecinos del padre (lo busco en las equiv y lo agrego)
+*/
 
 int main(){
     int n;
