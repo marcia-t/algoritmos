@@ -76,6 +76,7 @@ jug get_jug(int n, node t){
 
 //ojo: tengo que guardar la cantidad de lo que pasé
 //1:a, 2:b, 3:c
+//retorna un par que tiene la cantidad de litros pasados y el nodo modificado
 //precond: asumo que ya chequeé que las cantidades permiten pasar de p a q.
 pair<int,node> pass_from_to (int p, int q, node t){
     int sent;
@@ -112,31 +113,10 @@ graph G;
 
 
 int main(){
-    node uno = create_node(3, 0, 4, 0, 5, 5);
-   pair <int,node> dos = pass_from_to(3, 1, uno);
-   std::cout << dos.first  << '\n';
-    pair <int,node> tres = pass_from_to (3,2, dos.second);
-    std::cout << tres.first << '\n';
-    std::cout << dos.second.a.load << "  " << dos.second.a.filled << '\n';
-    std::cout << dos.second.b.load << "  " << dos.second.b.filled << '\n';
-    std::cout << dos.second.c.load << "  " << dos.second.c.filled << '\n';
-
-    std::cout << tres.second.a.load << "  " << tres.second.a.filled << '\n';
-    std::cout << tres.second.b.load << "  " << tres.second.b.filled << '\n';
-    std::cout << tres.second.c.load << "  " << tres.second.c.filled << '\n';
-
-
-    node o = create_node(3, 0, 4, 0, 5, 5);
-    node q = create_node(3, 2, 4, 0, 5, 5);
-    equiv e;
-    e.push_back(o);
-    bool exists = std::find(std::begin(e), std::end(e), q) != std::end(e);
-    if (exists) std::cout << "existe!" << '\n';
-    /*int n;
+    int n;
     cin >> n;
     for (size_t i = 0; i < n; i++) {
       cin >> a >> b >> c >> d;
       node ini = create_node(a, 0, b, 0, c, c);
-
-    }*/
+    }
 }
