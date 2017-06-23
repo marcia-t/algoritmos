@@ -109,9 +109,19 @@ using pi = pair<int,int>;
 using vpi = vector<pi>;
 using graph = vector<vpi>;
 using equiv = vector<node> ;
+
 int a, b, c, d;
 graph G;
+equiv E;
 
+
+//si ya existe, lo tengo que guardar igual entre los vecinos del padre.
+void create_graph(node ini){
+  bool exists = std::find(std::begin(E), std::end(E), ini) != std::end(E);
+  if (!exists) {
+    E.push_back(ini);
+  }
+}
 
 /*
 En cada nodo tengo que:
@@ -128,5 +138,8 @@ int main(){
     for (size_t i = 0; i < n; i++) {
       cin >> a >> b >> c >> d;
       node ini = create_node(a, 0, b, 0, c, c);
+      G.assign(10000, vpi());
+      E.resize(10000);
+      create_graph(ini);
     }
 }
