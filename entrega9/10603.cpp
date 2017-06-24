@@ -8,55 +8,66 @@
 #include <sstream>
 #include <bitset>
 #include <set>
+#include <unordered_map>
 
 using namespace std;
 
-struct jug {
-    int load;
-    int filled;
-    bool operator==(const jug& a) const
-      {
-          return (load == a.load && filled == a.filled);
-      }
-};
+//neighbor(pi): peso + vecino
+using pi = pair<int,int>;
+using vpi = vector<pi>;
+using graph = vector<vpi>;
+
+
+constexpr int INF = 1000*1000;
+int a, b, c, d, counter;
+graph G;
+
+
+
 
 struct node {
-    jug a;
-    jug b;
-    jug c;
+    int a;
+    int b;
+    int c;
+    node() {}
+    node(int A, int B, int C) : a(A), b(B), c(C) {}
     bool operator==(const node& nn) const
-      {
-          return (a == nn.a && b == nn.b && c == nn.c);
-      }
+    {
+        return (a == nn.a && b == nn.b && c == nn.c);
+    }
+    bool operator < (const node &n) const {
+        if (a < n.a) return true;
+        else if (a == n.a) {
+            if (b < n.b) return true;
+            else if (b == n.b) return c < n.c;
+            else return false;
+        }
+        else return false;
+    }
+
+
 };
-
-jug create_jug (int load, int filled){
-    jug j;
-    j.load = load;
-    j.filled = filled;
-    return j;
+void print (node n){
+    std::cout << "(" << a << ", " << n.a << "),  ("<< b << ", "<< n.b << "), (" << c << ", "<< n.c <<  ")"<<'\n';
 }
 
-node create_node (int a, int fa, int b,int fb, int c, int fc){
-    jug aa = create_jug(a, fa);
-    jug bb = create_jug(b, fb);
-    jug cc = create_jug(c, fc);
-    node n;
-    n.a = aa; n.b=bb; n.c =cc;
-    return n;
-}
+
+using equiv_n_int = map<node, int>;
+using equiv_int_n = map<int,node>;
+equiv_n_int node_key;
+equiv_int_n key_node;
 
 //1:a, 2:b, 3:c
-//en la pos n  del nodo t setear el jug j
-node set_jug_node(int n, jug j, node t){
+//en la pos n  del nodo t setear el valor j
+node set_value_node(char n, int j, node t){
     switch (n) {
-        case 1:
+        case 'a':
             t.a = j;
             break;
-        case 2:
+        case 'b':
             t.b = j;
             break;
-        case 3:
+        case 'c':
             t.c = j;
             break;
     }
@@ -64,70 +75,184 @@ node set_jug_node(int n, jug j, node t){
 }
 
 //1:a, 2:b, 3:c
-//get el jug n del nodo t
-jug get_jug(int n, node t){
-    switch (n) {
-        case 1:
+//get el jug a b o c del nodo t
+int get_value(char val, node t){
+    switch (val) {
+        case 'a':
             return t.a;
-        case 2:
+        case 'b':
             return t.b;
-        case 3:
+        case 'c':
             return t.c;
     }
 }
+
+int get_load(char val){
+    switch (val) {
+        case 'a':
+            return a;
+        case 'b':
+            return b;
+        case 'c':
+            return c;
+    }
+}
+
+
 
 //ojo: tengo que guardar la cantidad de lo que pasé
 //1:a, 2:b, 3:c
 //retorna un par que tiene la cantidad de litros pasados y el nodo modificado
 //precond: asumo que ya chequeé que las cantidades permiten pasar de p a q.
-pair<int,node> pass_from_to (int p, int q, node t){
+pair<int,node> pass_from_to (char p, char  q, node t){
     int sent;
-    jug from = get_jug(p,t);
-    jug to = get_jug(q,t);
-    int ct = to.load - to.filled; //lugar que tengo en to
-    int cf = from.filled; //lìquido disponible que tengo en from
+    int from = get_value(p,t);
+    int to = get_value(q,t);
+    int ct = get_load(q) - to; //lugar que tengo en to
+    int cf = from; //lìquido disponible que tengo en from
     //tengo cf y quiero pasar a ct
     //cant a pasar: ct.
     //filled en from es filled-ct (filled menos lo que voy a pasar)
     if(ct <= cf) {
-        to.filled+=ct;
-        from.filled-=ct;
+        to+=ct;
+        from-=ct;
         sent = ct;
     }
     else {
-        to.filled+=cf;
-        from.filled = 0;
+        to+=cf;
+        from = 0;
         sent=cf;
     }
-    t = set_jug_node(p,from,t);
-    t = set_jug_node(q,to,t);
+    t = set_value_node(p,from,t);
+    t = set_value_node(q,to,t);
     return make_pair(sent, t);
 }
 
-//neighbor(pi): peso + vecino
-using pi = pair<int,int>;
-using vpi = vector<pi>;
-using graph = vector<vpi>;
-using equiv = vector<node> ;
+//ln resultado de la operación, k el nodo padre
+/*void calculate(pair<int,node> ln, int k){
+    //ln.first son los litros que moví, ln.second es el nodo con el traspaso.
+    //si moví + de 0 litros, agrego el nodo (me fijo si existe antes)
 
-int a, b, c, d;
-graph G;
-equiv E;
-
-
-//si ya existe, lo tengo que guardar igual entre los vecinos del padre.
-void create_graph(node ini){
-  bool exists = std::find(std::begin(E), std::end(E), ini) != std::end(E);
-  if (!exists) {
-    E.push_back(ini);
-  }
+    if (ln.first != 0){
+        if (node_key.count(ln.second) > 0) {//ya existe
+          int nb_k = node_key[ln.second];
+          G[k].push_back(pi(ln.first, nb_k));
+          G[nb_k].push_back(pi(ln.first, k));
+        }
+        else{ //no existe aún
+          std::cout << "no existe y agrego!" << '\n';
+          print(ln.second);
+          node_key[ln.second] = counter;
+          key_node[counter] = ln.second;
+          //create_nb(ln.second);
+          counter++;
+          int nb_k = node_key[ln.second]; //es lo mismo q counter-1
+          G[k].push_back(pi(ln.first, nb_k));
+          G[nb_k].push_back(pi(ln.first, k));
+        }
+    }
+}*/
+void calculate_new_node(pair<int,node> ln, int k){
+  //std::cout << "no existe y agrego!" << '\n';
+  //print(ln.second);
+  node_key[ln.second] = counter;
+  key_node[counter] = ln.second;
+  counter++;
+  int nb_k = node_key[ln.second]; //es lo mismo q counter-1
+  G[k].push_back(pi(ln.first, nb_k));
+  G[nb_k].push_back(pi(ln.first, k));
 }
+
+void calculate_existing_node(pair<int,node> ln, int k){
+  int nb_k = node_key[ln.second];
+  G[k].push_back(pi(ln.first, nb_k));
+  G[nb_k].push_back(pi(ln.first, k));
+}
+
+//n será vecino de todos los que encuentre y viceversa tmb
+//si ya existe, lo tengo que guardar igual entre los vecinos del padre.
+void create_nb(node n){
+    //k es la clave de n, voy a agregar las adyacencias en G[k]...(peso,vecino);
+    int k = node_key[n];
+    auto ln1= pass_from_to('a','b',n);
+    if (ln1.first != 0){
+      if (node_key.count(ln1.second) > 0) calculate_existing_node(ln1,k);
+      else {
+        calculate_new_node(ln1,k);
+        create_nb(ln1.second);
+      }
+    }
+    //calculate(ln1, k);
+
+    auto ln2= pass_from_to('a','c',n);
+    //calculate(ln2, k);
+    if (ln2.first != 0){
+      if (node_key.count(ln2.second) > 0) calculate_existing_node(ln2,k);
+      else {
+        calculate_new_node(ln2,k);
+        create_nb(ln2.second);
+      }
+    }
+    auto ln3= pass_from_to('b','a',n);
+    //calculate(ln3, k);
+    if (ln3.first != 0){
+      if (node_key.count(ln3.second) > 0) calculate_existing_node(ln3,k);
+      else {
+        calculate_new_node(ln3,k);
+        create_nb(ln3.second);
+      }
+    }
+    auto ln4= pass_from_to('b','c',n);
+    //calculate(ln4, k);
+    if (ln4.first != 0){
+      if (node_key.count(ln4.second) > 0) calculate_existing_node(ln4,k);
+      else {
+        calculate_new_node(ln4,k);
+        create_nb(ln4.second);
+      }
+    }
+    auto ln5= pass_from_to('c','a',n);
+    //calculate(ln5, k);
+    if (ln5.first != 0){
+      if (node_key.count(ln5.second) > 0) calculate_existing_node(ln5,k);
+      else {
+        calculate_new_node(ln5,k);
+        create_nb(ln5.second);
+      }
+    }
+    auto ln6= pass_from_to('c','b',n);
+    //calculate(ln6, k);
+    if (ln6.first != 0){
+      if (node_key.count(ln6.second) > 0) calculate_existing_node(ln6,k);
+      else {
+        calculate_new_node(ln6,k);
+        create_nb(ln6.second);
+      }
+    }
+
+
+}
+
+
+
+
+
+
+
+void create_graph(node ini){
+    node_key[ini] = counter;
+    key_node[counter] = ini;
+    counter++;
+    create_nb(ini);
+
+}
+
 
 /*
 En cada nodo tengo que:
 pasar 1 a 2, 1 a 3, 2 a 1, 2 a 3, 3 a 1, 3 a 2
 creo el nodo de cada uno
-me fijo si existe entre las equivalencias
+me fijo si existe entre en el mapa
 si no existe, la agrego, y agrego el nodo actual a los vecinos del padre
 si ya existe, no lo agrego a las equiv pero sí lo agrego a los vecinos del padre (lo busco en las equiv y lo agrego)
 */
@@ -136,10 +261,27 @@ int main(){
     int n;
     cin >> n;
     for (size_t i = 0; i < n; i++) {
-      cin >> a >> b >> c >> d;
-      node ini = create_node(a, 0, b, 0, c, c);
-      G.assign(10000, vpi());
-      E.resize(10000);
-      create_graph(ini);
+        counter = 1;
+        cin >> a >> b >> c >> d;
+        node ini = node(0,0,c);
+        node_key.clear();
+        key_node.clear();
+        G.assign(10000, vpi());
+        create_graph(ini);
+
+        for (int i=0;i<12;i++)
+        {
+          for (int j=0;j<G[i].size();j++)
+          {
+            std::cout << "|[" << i << "]" << "  ("  <<G[i][j].first << ", "<< G[i][j].second << ")|";
+
+          }
+          std::cout << '\n';
+
+        }
+        for (size_t i = 0; i <= 10; i++) {
+          std::cout << i << ": " ;
+          print(key_node[i]);
+        }
     }
 }
