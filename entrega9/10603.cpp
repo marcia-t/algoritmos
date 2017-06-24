@@ -11,19 +11,13 @@
 #include <unordered_map>
 
 using namespace std;
-
 //neighbor(pi): peso + vecino
 using pi = pair<int,int>;
 using vpi = vector<pi>;
 using graph = vector<vpi>;
-
-
 constexpr int INF = 1000*1000;
 int a, b, c, d, counter;
 graph G;
-
-
-
 
 struct node {
     int a;
@@ -44,20 +38,16 @@ struct node {
         }
         else return false;
     }
-
-
 };
 void print (node n){
     std::cout << "(" << a << ", " << n.a << "),  ("<< b << ", "<< n.b << "), (" << c << ", "<< n.c <<  ")"<<'\n';
 }
-
 
 using equiv_n_int = map<node, int>;
 using equiv_int_n = map<int,node>;
 equiv_n_int node_key;
 equiv_int_n key_node;
 
-//1:a, 2:b, 3:c
 //en la pos n  del nodo t setear el valor j
 node set_value_node(char n, int j, node t){
     switch (n) {
@@ -75,7 +65,7 @@ node set_value_node(char n, int j, node t){
 }
 
 //1:a, 2:b, 3:c
-//get el jug a b o c del nodo t
+//get el valor a b o c del nodo t
 int get_value(char val, node t){
     switch (val) {
         case 'a':
@@ -97,8 +87,6 @@ int get_load(char val){
             return c;
     }
 }
-
-
 
 //ojo: tengo que guardar la cantidad de lo que pasé
 //1:a, 2:b, 3:c
@@ -153,22 +141,26 @@ pair<int,node> pass_from_to (char p, char  q, node t){
     }
 }*/
 void calculate_new_node(pair<int,node> ln, int k){
-  //std::cout << "no existe y agrego!" << '\n';
-  //print(ln.second);
   node_key[ln.second] = counter;
   key_node[counter] = ln.second;
   counter++;
   int nb_k = node_key[ln.second]; //es lo mismo q counter-1
   G[k].push_back(pi(ln.first, nb_k));
-  G[nb_k].push_back(pi(ln.first, k));
 }
 
 void calculate_existing_node(pair<int,node> ln, int k){
   int nb_k = node_key[ln.second];
   G[k].push_back(pi(ln.first, nb_k));
-  G[nb_k].push_back(pi(ln.first, k));
 }
 
+/*
+En cada nodo tengo que:
+pasar 1 a 2, 1 a 3, 2 a 1, 2 a 3, 3 a 1, 3 a 2
+creo el nodo de cada uno
+me fijo si existe entre en el mapa
+si no existe, la agrego, y agrego el nodo actual a los vecinos del padre
+si ya existe, no lo agrego a las equiv pero sí lo agrego a los vecinos del padre (lo busco en las equiv y lo agrego)
+*/
 //n será vecino de todos los que encuentre y viceversa tmb
 //si ya existe, lo tengo que guardar igual entre los vecinos del padre.
 void create_nb(node n){
@@ -182,10 +174,7 @@ void create_nb(node n){
         create_nb(ln1.second);
       }
     }
-    //calculate(ln1, k);
-
     auto ln2= pass_from_to('a','c',n);
-    //calculate(ln2, k);
     if (ln2.first != 0){
       if (node_key.count(ln2.second) > 0) calculate_existing_node(ln2,k);
       else {
@@ -194,7 +183,6 @@ void create_nb(node n){
       }
     }
     auto ln3= pass_from_to('b','a',n);
-    //calculate(ln3, k);
     if (ln3.first != 0){
       if (node_key.count(ln3.second) > 0) calculate_existing_node(ln3,k);
       else {
@@ -203,7 +191,6 @@ void create_nb(node n){
       }
     }
     auto ln4= pass_from_to('b','c',n);
-    //calculate(ln4, k);
     if (ln4.first != 0){
       if (node_key.count(ln4.second) > 0) calculate_existing_node(ln4,k);
       else {
@@ -212,7 +199,6 @@ void create_nb(node n){
       }
     }
     auto ln5= pass_from_to('c','a',n);
-    //calculate(ln5, k);
     if (ln5.first != 0){
       if (node_key.count(ln5.second) > 0) calculate_existing_node(ln5,k);
       else {
@@ -221,7 +207,6 @@ void create_nb(node n){
       }
     }
     auto ln6= pass_from_to('c','b',n);
-    //calculate(ln6, k);
     if (ln6.first != 0){
       if (node_key.count(ln6.second) > 0) calculate_existing_node(ln6,k);
       else {
@@ -229,59 +214,46 @@ void create_nb(node n){
         create_nb(ln6.second);
       }
     }
-
-
 }
-
-
-
-
-
-
 
 void create_graph(node ini){
     node_key[ini] = counter;
     key_node[counter] = ini;
     counter++;
     create_nb(ini);
+}
 
+//cada arista es peso + vecino
+vector<int> dijkstra(int from) {
+    vector<int> dist(G.size(), INF);
+    priority_queue<pi, vector<pi>, greater<pi>> q;
+    q.push({0, from});
+    while(not q.empty()) {
+        auto u = q.top();
+        q.pop();
+        if(dist[u.second] < INF) continue;
+        dist[u.second] = u.first;
+        for(auto v : G[u.second]) if(dist[v.second] == INF) {
+            q.push({u.first + v.first, v.second});
+        }
+    }
+    return dist;
 }
 
 
-/*
-En cada nodo tengo que:
-pasar 1 a 2, 1 a 3, 2 a 1, 2 a 3, 3 a 1, 3 a 2
-creo el nodo de cada uno
-me fijo si existe entre en el mapa
-si no existe, la agrego, y agrego el nodo actual a los vecinos del padre
-si ya existe, no lo agrego a las equiv pero sí lo agrego a los vecinos del padre (lo busco en las equiv y lo agrego)
-*/
 
 int main(){
     int n;
     cin >> n;
     for (size_t i = 0; i < n; i++) {
-        counter = 1;
+        counter = 0;
         cin >> a >> b >> c >> d;
         node ini = node(0,0,c);
         node_key.clear();
         key_node.clear();
         G.assign(10000, vpi());
         create_graph(ini);
-
-        for (int i=0;i<12;i++)
-        {
-          for (int j=0;j<G[i].size();j++)
-          {
-            std::cout << "|[" << i << "]" << "  ("  <<G[i][j].first << ", "<< G[i][j].second << ")|";
-
-          }
-          std::cout << '\n';
-
-        }
-        for (size_t i = 0; i <= 10; i++) {
-          std::cout << i << ": " ;
-          print(key_node[i]);
-        }
+        auto dij = dijkstra(0);
+        std::cout << dij[8] << '\n';
     }
 }
