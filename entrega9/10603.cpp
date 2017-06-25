@@ -8,15 +8,25 @@
 #include <sstream>
 #include <bitset>
 #include <set>
-#include <unordered_map>
+
+/*
+COMPLEJIDAD
+La complejidad del Algoritmo de Dijkstra usando colas de prioridad es de O(m log n).
+Siendo:
+n=vértices (puede haber hasta 200*200*200 vértices)
+m=aristas (n*6)
+
+*Cada vértice puede tener hasta grado 6, que sería el resultado de poder mover líquido entre
+los vasos de las 6 maneras disponibles:
+a->b, a->c, b->a, b->c, c->a, c->b.
+*/
 
 using namespace std;
 //neighbor(pi): peso + vecino
 using pi = pair<int,int>;
 using vpi = vector<pi>;
 using graph = vector<vpi>;
-
-constexpr int INF = 1000*1000;
+constexpr int INF = 201*201*201;
 int a, b, c, d, counter;
 graph G;
 vector<vector<int>> resol;
@@ -46,9 +56,7 @@ void print (node n){
 }
 
 using equiv_n_int = map<node, int>;
-using equiv_int_n = map<int,node>;
 equiv_n_int node_key;
-equiv_int_n key_node;
 
 //en la pos n  del nodo t setear el valor j
 node set_value_node(char n, int j, node t){
@@ -66,7 +74,6 @@ node set_value_node(char n, int j, node t){
     return t;
 }
 
-//1:a, 2:b, 3:c
 //get el valor a b o c del nodo t
 int get_value(char val, node t){
     switch (val) {
@@ -89,7 +96,7 @@ int get_load(char val){
             return c;
     }
 }
-
+//muestra el valor más cercano a d del nodo t
 int closest_to_d (node t){
     int res = INF;
     int dif = INF;
@@ -108,8 +115,6 @@ int closest_to_d (node t){
     return res;
 }
 
-//ojo: tengo que guardar la cantidad de lo que pasé
-//1:a, 2:b, 3:c
 //retorna un par que tiene la cantidad de litros pasados y el nodo modificado
 pair<int,node> pass_from_to (char p, char  q, node t){
     int sent;
@@ -134,22 +139,20 @@ pair<int,node> pass_from_to (char p, char  q, node t){
     t = set_value_node(q,to,t);
     return make_pair(sent, t);
 }
-
+//ln tiene peso y nuevo nodo, desde k  (vecino)
 void calculate_new_node(pair<int,node> ln, int k){
   node_key[ln.second] = counter;
-  key_node[counter] = ln.second;
   counter++;
   int nb_k = node_key[ln.second]; //es lo mismo q counter-1
   G[k].push_back(pi(ln.first, nb_k));
 }
-
+//k es el vecino  , ln tiene peso desde k y nodo hijo
 void calculate_existing_node(pair<int,node> ln, int k){
   int nb_k = node_key[ln.second];
   G[k].push_back(pi(ln.first, nb_k));
 }
 
-
-
+//en resol guardo para cada valor d, o d', los nodos que lo alcanzan
 void add_to_res(node t){
   int de = closest_to_d(t);
   if (de != INF){
@@ -159,10 +162,10 @@ void add_to_res(node t){
 }
 
 /*
-En cada nodo tengo que:
-pasar 1 a 2, 1 a 3, 2 a 1, 2 a 3, 3 a 1, 3 a 2
+En cada nodo tengo que pasar:
+a->b, a->c, b->a, b->c, c->a, c->b.
 creo el nodo de cada uno
-me fijo si existe entre en el mapa
+me fijo si existe en el mapa
 si no existe, la agrego, y agrego el nodo actual a los vecinos del padre
 si ya existe, no lo agrego a las equiv pero sí lo agrego a los vecinos del padre (lo busco en las equiv y lo agrego)
 */
@@ -230,7 +233,6 @@ void create_nb(node n){
 
 void create_graph(node ini){
     node_key[ini] = counter;
-    key_node[counter] = ini;
     counter++;
     create_nb(ini);
 }
@@ -261,7 +263,6 @@ int main(){
         resol.assign(d+1, vector<int>());
         node ini = node(0,0,c);
         node_key.clear();
-        key_node.clear();
         G.assign(10000, vpi());
         create_graph(ini);
         auto dij = dijkstra(0);
