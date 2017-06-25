@@ -15,9 +15,11 @@ using namespace std;
 using pi = pair<int,int>;
 using vpi = vector<pi>;
 using graph = vector<vpi>;
+
 constexpr int INF = 1000*1000;
 int a, b, c, d, counter;
 graph G;
+vector<vector<int>> resol;
 
 struct node {
     int a;
@@ -88,10 +90,27 @@ int get_load(char val){
     }
 }
 
+int closest_to_d (node t){
+    int res = INF;
+    int dif = INF;
+    if (t.a <= d && d-t.a <= dif) {
+      dif = min (dif, d-t.a);
+      res = t.a;
+    }
+    if (t.b <= d && d-t.b <= dif) {
+      dif = min (dif, d-t.b);
+      res = t.b;
+    }
+    if (t.c <= d && d-t.c <= dif) {
+      dif = min (dif, d-t.c);
+      res = t.c;
+    }
+    return res;
+}
+
 //ojo: tengo que guardar la cantidad de lo que pasé
 //1:a, 2:b, 3:c
 //retorna un par que tiene la cantidad de litros pasados y el nodo modificado
-//precond: asumo que ya chequeé que las cantidades permiten pasar de p a q.
 pair<int,node> pass_from_to (char p, char  q, node t){
     int sent;
     int from = get_value(p,t);
@@ -116,30 +135,6 @@ pair<int,node> pass_from_to (char p, char  q, node t){
     return make_pair(sent, t);
 }
 
-//ln resultado de la operación, k el nodo padre
-/*void calculate(pair<int,node> ln, int k){
-    //ln.first son los litros que moví, ln.second es el nodo con el traspaso.
-    //si moví + de 0 litros, agrego el nodo (me fijo si existe antes)
-
-    if (ln.first != 0){
-        if (node_key.count(ln.second) > 0) {//ya existe
-          int nb_k = node_key[ln.second];
-          G[k].push_back(pi(ln.first, nb_k));
-          G[nb_k].push_back(pi(ln.first, k));
-        }
-        else{ //no existe aún
-          std::cout << "no existe y agrego!" << '\n';
-          print(ln.second);
-          node_key[ln.second] = counter;
-          key_node[counter] = ln.second;
-          //create_nb(ln.second);
-          counter++;
-          int nb_k = node_key[ln.second]; //es lo mismo q counter-1
-          G[k].push_back(pi(ln.first, nb_k));
-          G[nb_k].push_back(pi(ln.first, k));
-        }
-    }
-}*/
 void calculate_new_node(pair<int,node> ln, int k){
   node_key[ln.second] = counter;
   key_node[counter] = ln.second;
@@ -151,6 +146,16 @@ void calculate_new_node(pair<int,node> ln, int k){
 void calculate_existing_node(pair<int,node> ln, int k){
   int nb_k = node_key[ln.second];
   G[k].push_back(pi(ln.first, nb_k));
+}
+
+
+
+void add_to_res(node t){
+  int de = closest_to_d(t);
+  if (de != INF){
+    int ref = node_key[t];
+    resol[de].push_back(ref);
+  }
 }
 
 /*
@@ -166,12 +171,14 @@ si ya existe, no lo agrego a las equiv pero sí lo agrego a los vecinos del padr
 void create_nb(node n){
     //k es la clave de n, voy a agregar las adyacencias en G[k]...(peso,vecino);
     int k = node_key[n];
+    add_to_res(n);
     auto ln1= pass_from_to('a','b',n);
     if (ln1.first != 0){
       if (node_key.count(ln1.second) > 0) calculate_existing_node(ln1,k);
       else {
         calculate_new_node(ln1,k);
         create_nb(ln1.second);
+        add_to_res(ln1.second);
       }
     }
     auto ln2= pass_from_to('a','c',n);
@@ -180,6 +187,7 @@ void create_nb(node n){
       else {
         calculate_new_node(ln2,k);
         create_nb(ln2.second);
+        add_to_res(ln2.second);
       }
     }
     auto ln3= pass_from_to('b','a',n);
@@ -188,6 +196,7 @@ void create_nb(node n){
       else {
         calculate_new_node(ln3,k);
         create_nb(ln3.second);
+        add_to_res(ln3.second);
       }
     }
     auto ln4= pass_from_to('b','c',n);
@@ -196,6 +205,7 @@ void create_nb(node n){
       else {
         calculate_new_node(ln4,k);
         create_nb(ln4.second);
+        add_to_res(ln4.second);
       }
     }
     auto ln5= pass_from_to('c','a',n);
@@ -204,6 +214,7 @@ void create_nb(node n){
       else {
         calculate_new_node(ln5,k);
         create_nb(ln5.second);
+        add_to_res(ln5.second);
       }
     }
     auto ln6= pass_from_to('c','b',n);
@@ -212,6 +223,7 @@ void create_nb(node n){
       else {
         calculate_new_node(ln6,k);
         create_nb(ln6.second);
+        add_to_res(ln6.second);
       }
     }
 }
@@ -240,20 +252,32 @@ vector<int> dijkstra(int from) {
     return dist;
 }
 
-
-
 int main(){
     int n;
     cin >> n;
     for (size_t i = 0; i < n; i++) {
         counter = 0;
         cin >> a >> b >> c >> d;
+        resol.assign(d+1, vector<int>());
         node ini = node(0,0,c);
         node_key.clear();
         key_node.clear();
         G.assign(10000, vpi());
         create_graph(ini);
         auto dij = dijkstra(0);
-        std::cout << dij[8] << '\n';
+        bool head = false;
+        for (size_t i = d; i > 0; i--) {
+          if (!resol[i].empty()){
+            int mini = INF;
+            for (size_t j = 0; j < resol[i].size(); j++) {
+              mini = min (dij[resol[i][j]], mini);
+            }
+            std::cout << mini << " " << i << '\n';
+            head = true;
+            break;
+          }
+        }
+        if (!head)
+        std::cout << "0 0" << '\n';
     }
 }
