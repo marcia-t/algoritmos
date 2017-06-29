@@ -44,6 +44,7 @@ int main(){
     while (cin >> C >> S >> Q){
         if (!(C==0 && S==0 && Q==0)){
             c++;
+            if (c>1) cout << '\n';
             G.assign(C+1, vpi());
             int n, o, p;
             for (size_t i = 0; i < S; i++) {
@@ -62,7 +63,7 @@ int main(){
                 if (r== 0) cout << "no path" << '\n';
                 else std::cout << r << '\n';
             }
-            cout << '\n';
+
         }
         else break;
     }
