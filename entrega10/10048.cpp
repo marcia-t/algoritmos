@@ -1,33 +1,69 @@
-x|#include <iostream>
+#include <iostream>
 #include <vector>
+#include <queue>
 using namespace std;
 using pi = pair<int,int>;
 using vpi = vector<pi>;
 using graph = vector<vpi>;
 using minmax = vector<vector<int>>;
 
+constexpr int INF = 1000*1000;
 int C, S, Q;
 graph G;
-minmax RES;
+vector<int> DIST;
+vector<bool> VISITED;
 
 
-void prim(){
-
+int prim(int o, int d){
+    int u,w;
+    int worst_db = 0;
+    priority_queue<pi, vector<pi>, greater<pi>> pq;
+    pq.push(pi(0, o));
+    DIST[o] = 0;
+    while (!pq.empty()) {
+        pi front = pq.top(); pq.pop();
+        u = front.second, w = front.first;
+        if (!VISITED[u]){
+            VISITED[u] = true;
+            worst_db = max(worst_db, w);
+            if (u == d) return worst_db;
+            for (pi v : G[u]) {
+                if (!VISITED[v.second] && DIST[v.second] > v.first){
+                    DIST[v.second] = v.first;
+                    pq.push(pi(v.first, v.second));
+                }
+            }
+        }
+    }
+    return 0;
 }
 
+
 int main(){
-  while (cin >> C >> S >> Q){
-    if (!(C==0 && S==0 && Q==0)){
-      G.assign(C+1, vpi());
-      int n, o, p;
-      RES.assign(C+1, vector<int>(C+1, 0));
-      for (size_t i = 0; i < S; i++) {
-          cin >> n >> o >> p;
-          G[n].push_back(pi(p,o));
-          G[o].push_back(pi(p,n));
-          prim();
-      }
+    int c = 0;
+    while (cin >> C >> S >> Q){
+        if (!(C==0 && S==0 && Q==0)){
+            c++;
+            G.assign(C+1, vpi());
+            int n, o, p;
+            for (size_t i = 0; i < S; i++) {
+                cin >> n >> o >> p;
+                G[n].push_back(pi(p,o));
+                G[o].push_back(pi(p,n));
+            }
+
+            cout << "Case #" << c << '\n';
+            for (size_t j = 0; j < Q; j++) {
+                DIST.assign(C+1, INF);
+                VISITED.assign(C+1, false);
+                int o, d;
+                cin >> o >> d;
+                int r = prim(o,d);
+                if (r== 0) cout << "no path" << '\n';
+                else std::cout << r << '\n';
+            }
+            cout << '\n';
+        }
+        else break;
     }
-    else break;
-  }
 }
