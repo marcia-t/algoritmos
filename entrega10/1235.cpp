@@ -14,8 +14,8 @@ int counter;
 graph G;
 vector<int> DIST;
 vector<bool> VISITED;
-int zero_pos_kn;
-int zero_pos;
+int zero_pos, zero_pos2;
+
 
 struct node {
     int a;
@@ -87,19 +87,14 @@ void create_key_map(){
     for (size_t i = 0; i < codes.size(); i++) {
         node n = set_node(codes[i]);
         key_node[counter] = n;
-        if (codes[i] == 0000) zero_pos_kn = counter;
         counter++;
     }
 }
 
 void process_codes(){
-    if (!zero_exists){
-        codes.push_back(0000);
-    }
     create_key_map();
     for (size_t i = 0; i < counter; i++) {
         node n = key_node[i];
-        if (i == zero_pos_kn) zero_pos = i;
         node m;
         for (size_t j = i+1; j  < counter; j++) {
             m =  key_node[j];
@@ -110,18 +105,29 @@ void process_codes(){
     }
 }
 
+int calculate_zero_distance(){
+  int d = INF;
+  for (size_t i = 0; i < codes.size(); i++) {
+      node n = set_node(codes[i]);
+      node m = node(0,0,0,0);
+      d = min(d, calculate_t(n,m));
+  }
+  return d;
+}
+
+
 int prim(){
     int u,w;
     int min_rolls = 0;
     priority_queue<pi, vector<pi>, greater<pi>> pq;
-    pq.push(pi(0, zero_pos));
-    DIST[zero_pos] = 0;
+    pq.push(pi(0, 0));
+    DIST[0] = 0;
     while (!pq.empty()) {
         pi front = pq.top(); pq.pop();
         u = front.second, w = front.first;
         if (!VISITED[u]){
             VISITED[u] = true;
-            cout << u << '\n';
+            //cout << u << " " << w <<'\n';
             min_rolls = min_rolls+w;
             for (pi v : G[u]) {
                 if (!VISITED[v.second] && DIST[v.second] > v.first){
@@ -131,7 +137,9 @@ int prim(){
             }
         }
     }
-    return min_rolls;
+    int z = 0;
+    if(!zero_exists) z = calculate_zero_distance();
+    return min_rolls+z;
 }
 
 
@@ -154,7 +162,7 @@ int main(){
             codes.push_back(c);
         }
         process_codes();
-        for (size_t i = 0; i < key_node.size(); i++) {
+        /*for (size_t i = 0; i < key_node.size(); i++) {
             std::cout << i << ": "; print(key_node[i]);
             std::cout << '\n';
         }
@@ -167,7 +175,7 @@ int main(){
             }
             std::cout << '\n';
 
-        }
+        }*/
         std::cout << prim() << '\n';
     }
 }
