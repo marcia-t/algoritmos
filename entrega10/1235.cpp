@@ -54,10 +54,29 @@ node get_node(int number){
     return n;
 }
 
+int calculate (int a, int b){
+  int up, down;
+  if (a<b) up = 10-a+b;
+  else up = a-b;
+  if (b<a) down= 10-b+a;
+  else down=  b-a;
+  return (min(up,down));
+}
+
+int calculate_t (node n, node m){
+  int aa = calculate(n.a,m.a);
+  int bb = calculate(n.b,m.b);
+  int cc = calculate(n.c,m.c);
+  int dd = calculate(n.d,m.d);
+  return aa+bb+cc+dd;
+}
+
 void process_codes(){
-  for (size_t i = 0; i < codes.size(); i++) {
+  //el último se procesará solo
+  for (size_t i = 0; i < codes.size()-1; i++) {
     node n = get_node(codes[i]);
-    print(n);
+    node m = get_node(codes[i+1]);
+    int d = calculate_t(n,m);
   }
 }
 
