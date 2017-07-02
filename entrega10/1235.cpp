@@ -1,13 +1,21 @@
 #include <iostream>
 #include <vector>
 #include <queue>
+#include <map>
 using namespace std;
 using pi = pair<int,int>;
 using vpi = vector<pi>;
 using graph = vector<vpi>;
 
+constexpr int INF = 1000*1000;
 vector<int> codes;
 bool zero_exists = false;
+int counter;
+graph G;
+vector<int> DIST;
+vector<bool> VISITED;
+int zero_pos_kn;
+int zero_pos;
 
 struct node {
     int a;
@@ -25,17 +33,20 @@ struct node {
         else if (a == n.a) {
             if (b < n.b) return true;
             else if (b == n.b) {
-              if (c < n.c) return true;
-              else if (c == n.c) return d < n.d;
-              else return false;
+                if (c < n.c) return true;
+                else if (c == n.c) return d < n.d;
+                else return false;
             }
         }
         else return false;
     }
 };
 
+using equiv_int_n = map<int, node>;
+equiv_int_n key_node;
+
 void print (node n){
-  std::cout << n.a << " " << n.b << " " << n.c << " " << n.d << '\n';
+    std::cout << n.a << " " << n.b << " " << n.c << " " << n.d << '\n';
 }
 
 node set_node(int number){
@@ -56,52 +67,107 @@ node set_node(int number){
 }
 
 int calculate (int a, int b){
-  int up, down;
-  if (a<b) up = 10-a+b;
-  else up = a-b;
-  if (b<a) down= 10-b+a;
-  else down=  b-a;
-  return (min(up,down));
+    int up, down;
+    if (a<b) up = b-a;
+    else up=10-a+b;
+    if (a<b) down=a+10-b;
+    else down=a-b;
+    return (min(up,down));
 }
 
 int calculate_t (node n, node m){
-  int aa = calculate(n.a,m.a);
-  int bb = calculate(n.b,m.b);
-  int cc = calculate(n.c,m.c);
-  int dd = calculate(n.d,m.d);
-  return aa+bb+cc+dd;
+    int aa = calculate(n.a,m.a);
+    int bb = calculate(n.b,m.b);
+    int cc = calculate(n.c,m.c);
+    int dd = calculate(n.d,m.d);
+    return aa+bb+cc+dd;
+}
+
+void create_key_map(){
+    for (size_t i = 0; i < codes.size(); i++) {
+        node n = set_node(codes[i]);
+        key_node[counter] = n;
+        if (codes[i] == 0000) zero_pos_kn = counter;
+        counter++;
+    }
 }
 
 void process_codes(){
-  //el último se procesará solo
-  if (!zero_exists){
-    codes.push_back(0000);
-  }
-  for (size_t i = 0; i < codes.size(); i++) {
-    node n = set_node(codes[i]);
-    node m;
-    for (size_t j = i+1; j  < codes.size(); j++) {
-       m =  set_node(codes[j]);
-       int d = calculate_t(n,m);
-       print(n);
-       print (m);
-       std::cout << d << '\n';
+    if (!zero_exists){
+        codes.push_back(0000);
     }
-  }
+    create_key_map();
+    for (size_t i = 0; i < counter; i++) {
+        node n = key_node[i];
+        if (i == zero_pos_kn) zero_pos = i;
+        node m;
+        for (size_t j = i+1; j  < counter; j++) {
+            m =  key_node[j];
+            int d = calculate_t(n,m);
+            G[i].push_back(pi(d,j));
+            G[j].push_back(pi(d,i));
+        }
+    }
 }
 
-int main(){
-  int t;
-  cin >> t;
-  for (size_t i = 0; i < t; i++) {
-    int n;
-    cin >> n;
-    for (size_t j = 0; j < n; j++) {
-      int c;
-      cin >> c;
-      if (c == 0000) zero_exists = true;
-      codes.push_back(c);
+int prim(){
+    int u,w;
+    int min_rolls = 0;
+    priority_queue<pi, vector<pi>, greater<pi>> pq;
+    pq.push(pi(0, zero_pos));
+    DIST[zero_pos] = 0;
+    while (!pq.empty()) {
+        pi front = pq.top(); pq.pop();
+        u = front.second, w = front.first;
+        if (!VISITED[u]){
+            VISITED[u] = true;
+            cout << u << '\n';
+            min_rolls = min_rolls+w;
+            for (pi v : G[u]) {
+                if (!VISITED[v.second] && DIST[v.second] > v.first){
+                    DIST[v.second] = v.first;
+                    pq.push(pi(v.first, v.second));
+                }
+            }
+        }
     }
-    process_codes();
-  }
+    return min_rolls;
+}
+
+
+
+int main(){
+    int t;
+    cin >> t;
+    for (size_t i = 0; i < t; i++) {
+        int n;
+        cin >> n;
+        counter = 0;
+        G.assign(n+1,vpi());
+        key_node.clear();
+        DIST.assign(n+1, INF);
+        VISITED.assign(n+1, false);
+        for (size_t j = 0; j < n; j++) {
+            int c;
+            cin >> c;
+            if (c == 0000) zero_exists = true;
+            codes.push_back(c);
+        }
+        process_codes();
+        for (size_t i = 0; i < key_node.size(); i++) {
+            std::cout << i << ": "; print(key_node[i]);
+            std::cout << '\n';
+        }
+        for (int i=0;i<G.size();i++)
+        {
+            for (int j=0;j<G[i].size();j++)
+            {
+                std::cout << "|[" << i << "]" << "  ("  <<G[i][j].first << ", "<< G[i][j].second << ")|";
+
+            }
+            std::cout << '\n';
+
+        }
+        std::cout << prim() << '\n';
+    }
 }
