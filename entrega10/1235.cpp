@@ -127,7 +127,6 @@ int prim(){
         u = front.second, w = front.first;
         if (!VISITED[u]){
             VISITED[u] = true;
-            //cout << u << " " << w <<'\n';
             min_rolls = min_rolls+w;
             for (pi v : G[u]) {
                 if (!VISITED[v.second] && DIST[v.second] > v.first){
@@ -155,6 +154,7 @@ int main(){
         key_node.clear();
         DIST.assign(n+1, INF);
         VISITED.assign(n+1, false);
+        codes.clear();
         for (size_t j = 0; j < n; j++) {
             int c;
             cin >> c;
@@ -162,20 +162,6 @@ int main(){
             codes.push_back(c);
         }
         process_codes();
-        /*for (size_t i = 0; i < key_node.size(); i++) {
-            std::cout << i << ": "; print(key_node[i]);
-            std::cout << '\n';
-        }
-        for (int i=0;i<G.size();i++)
-        {
-            for (int j=0;j<G[i].size();j++)
-            {
-                std::cout << "|[" << i << "]" << "  ("  <<G[i][j].first << ", "<< G[i][j].second << ")|";
-
-            }
-            std::cout << '\n';
-
-        }*/
         std::cout << prim() << '\n';
     }
 }
