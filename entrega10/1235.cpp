@@ -7,6 +7,7 @@ using vpi = vector<pi>;
 using graph = vector<vpi>;
 
 vector<int> codes;
+bool zero_exists = false;
 
 struct node {
     int a;
@@ -37,7 +38,7 @@ void print (node n){
   std::cout << n.a << " " << n.b << " " << n.c << " " << n.d << '\n';
 }
 
-node get_node(int number){
+node set_node(int number){
     int digit = number%10;
     number /= 10;
     int d = digit;
@@ -73,10 +74,19 @@ int calculate_t (node n, node m){
 
 void process_codes(){
   //el último se procesará solo
-  for (size_t i = 0; i < codes.size()-1; i++) {
-    node n = get_node(codes[i]);
-    node m = get_node(codes[i+1]);
-    int d = calculate_t(n,m);
+  if (!zero_exists){
+    codes.push_back(0000);
+  }
+  for (size_t i = 0; i < codes.size(); i++) {
+    node n = set_node(codes[i]);
+    node m;
+    for (size_t j = i+1; j  < codes.size(); j++) {
+       m =  set_node(codes[j]);
+       int d = calculate_t(n,m);
+       print(n);
+       print (m);
+       std::cout << d << '\n';
+    }
   }
 }
 
@@ -89,6 +99,7 @@ int main(){
     for (size_t j = 0; j < n; j++) {
       int c;
       cin >> c;
+      if (c == 0000) zero_exists = true;
       codes.push_back(c);
     }
     process_codes();
