@@ -7,6 +7,14 @@ using pi = pair<int,int>;
 using vpi = vector<pi>;
 using graph = vector<vpi>;
 
+/*
+COMPLEJIDAD
+El algoritmo de Prim implementado con colas de prioridad tiene complejidad O(m log n) con:
+n: cantidad de vértices
+m: cantidad de aristas
+
+*/
+
 constexpr int INF = 1000*1000;
 vector<int> codes;
 bool zero_exists = false;
@@ -14,7 +22,6 @@ int counter;
 graph G;
 vector<int> DIST;
 vector<bool> VISITED;
-int zero_pos, zero_pos2;
 
 
 struct node {
@@ -107,9 +114,9 @@ void process_codes(){
 
 int calculate_zero_distance(){
   int d = INF;
+  node m = node(0,0,0,0);
   for (size_t i = 0; i < codes.size(); i++) {
       node n = set_node(codes[i]);
-      node m = node(0,0,0,0);
       d = min(d, calculate_t(n,m));
   }
   return d;
@@ -155,6 +162,7 @@ int main(){
         DIST.assign(n+1, INF);
         VISITED.assign(n+1, false);
         codes.clear();
+        zero_exists = false;
         for (size_t j = 0; j < n; j++) {
             int c;
             cin >> c;
