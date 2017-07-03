@@ -10,9 +10,13 @@ using graph = vector<vpi>;
 /*
 COMPLEJIDAD
 El algoritmo de Prim implementado con colas de prioridad tiene complejidad O(m log n) con:
-n: cantidad de vértices
-m: cantidad de aristas
-
+n: cantidad de vértices (n)
+m: cantidad de aristas (n(n-1)/2)
+La cantidad de vértices estará dada por la cantidad de códigos, N.
+Cada vértice estará conectado con el resto de los vértices,
+formando un grafo completo con n(n-1)/2 aristas.
+Si el cero no llegara a estar entre los códigos, para calcular el peso tendremos O(n) (recorrer todos los códigos)
+Entonces, en el peor caso, el algoritmo tendrá complejidad O(m log n) + O(n).
 */
 
 constexpr int INF = 1000*1000;
